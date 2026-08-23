@@ -1,0 +1,8 @@
+# Rust
+/target
+
+# Cargo.lock est VOLONTAIREMENT versionne : ce depot produit un binaire, pas une
+# bibliotheque. Verrouiller les versions rend les builds reproductibles.
+
+# macOS
+.DS_Store

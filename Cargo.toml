@@ -1,0 +1,16 @@
+[package]
+name = "sonde-s4mk1"
+version = "0.1.0"
+edition = "2021"
+# GPL-2.0 SANS « or later » : les .c de caiaq sont en GPL-2.0-or-later, mais
+# `device.h` — d'ou viennent EP1_CMD_*, EP*_BUFSIZE et caiaq_device_spec — est
+# en GPL-2.0 seul. Le terme le plus strict s'impose au tout.
+license = "GPL-2.0-only"
+description = "Sonde de diagnostic USB pour Traktor Kontrol S4 MK1 (17cc:baff)"
+
+[dependencies]
+# rusb est sous licence MIT — compatible avec la GPL-2.0 de cette sonde.
+# La fonctionnalite « vendored » compile libusb depuis les sources : aucun
+# « brew install libusb » necessaire, mais il faut un compilateur C
+# (sur macOS : xcode-select --install).
+rusb = { version = "0.9", features = ["vendored"] }
