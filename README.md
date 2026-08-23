@@ -42,8 +42,26 @@ et laisserait des fichiers inaccessibles dans `target/`.
 
 | Commande | Ce qu'elle fait |
 |---|---|
-| `sonde-s4mk1` | **surveillance** : attend le boîtier, l'arme, affiche les contrôles, encaisse les débranchements. Ne s'arrête jamais seule. |
+| `sonde-s4mk1` | **surveillance** : attend le boîtier, l'arme, affiche les contrôles **décodés**, encaisse les débranchements. Ne s'arrête jamais seule. |
+| `sonde-s4mk1 --brut` | la même chose, mais en blocs hexadécimaux de 16 octets, octets modifiés encadrés. |
 | `sonde-s4mk1 --diagnostic` | dump du descripteur USB — interfaces, endpoints, alimentation — puis sort. |
+
+En mode décodé, chaque geste produit une ligne lisible :
+
+```
+[  12.31s] axe  7 crossfader        818 / 4095
+[  12.44s] jog G  position  157 / 1023  (horodatage 0xeeb8)
+[  12.51s] bouton 20  enfonce
+```
+
+Les étiquettes (`crossfader`, `EQ A bas`…) viennent des **commentaires de `caiaq`** et
+ne sont **pas validées physiquement** — c'est l'objet de la tâche 4. L'ordre des canaux
+du S4 étant C-A-B-D de gauche à droite, les intuitions sont trompeuses : utiliser
+`--brut` ou les numéros d'axe pour établir la correspondance réelle.
+
+Un contrôle qui ne bouge pas n'émet rien, et l'état de repos (tout à zéro, boutons
+relâchés) sert de référence : au démarrage, seuls les contrôles **déjà hors position
+neutre** se signalent.
 
 Le mode surveillance **ne dépend pas de l'ordre de branchement** : on peut le lancer
 avant le S4, débrancher, rebrancher — il se réarme seul. `Ctrl-C` rend l'interface

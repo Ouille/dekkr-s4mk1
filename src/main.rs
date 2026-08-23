@@ -11,6 +11,7 @@
 // ⛔ Ne JAMAIS integrer ce code au depot DekkR (front proprietaire).
 
 mod affichage;
+mod decode;
 mod usb;
 
 use std::sync::atomic::{AtomicBool, Ordering};
@@ -19,6 +20,7 @@ use std::thread::sleep;
 use std::time::Duration;
 
 use affichage::Moniteur;
+use decode::{Decodeur, Evenement};
 use usb::{Lecture, S4};
 
 /// Rythme d'attente quand le boitier est absent. Assez lent pour ne rien
@@ -31,11 +33,13 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     }
     if std::env::args().any(|a| a == "--help" || a == "-h") {
         println!("sonde-s4mk1 — Traktor Kontrol S4 MK1");
-        println!("  (sans argument)  surveille le boitier et affiche les controles");
+        println!("  (sans argument)  surveille le boitier et affiche les controles decodes");
+        println!("  --brut           affiche les blocs de 16 octets en hexadecimal");
         println!("  --diagnostic     dump du descripteur USB, puis sort");
         return Ok(());
     }
-    surveiller()
+    let brut = std::env::args().any(|a| a == "--brut" || a == "-b");
+    surveiller(brut)
 }
 
 // ── Boucle de surveillance ────────────────────────────────────────────────────
@@ -45,7 +49,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 ///
 /// 🔑 Le programme ne depend PAS de l'ordre de branchement. On peut le lancer
 /// avant le S4, le debrancher, le rebrancher : il se rearme seul.
-fn surveiller() -> Result<(), Box<dyn std::error::Error>> {
+fn surveiller(brut: bool) -> Result<(), Box<dyn std::error::Error>> {
     let stop = Arc::new(AtomicBool::new(false));
     {
         let stop = Arc::clone(&stop);
@@ -53,10 +57,15 @@ fn surveiller() -> Result<(), Box<dyn std::error::Error>> {
     }
 
     println!("sonde-s4mk1 — surveillance ({:04x}:{:04x})", usb::VID, usb::PID);
+    if brut {
+        println!("Mode brut : blocs hexadecimaux, octets modifies encadres.");
+    }
     println!("Ctrl-C pour arreter.\n");
 
     let mut boitier: Option<S4> = None;
-    let mut moniteur = Moniteur::new();
+    let mut moniteur = Moniteur::new(brut);
+    let mut decodeur = Decodeur::new();
+    let mut evenements: Vec<Evenement> = Vec::new();
     let mut tampon = [0u8; usb::EP4_BUFSIZE];
     // Ne pas repeter « en attente » a chaque tour de boucle.
     let mut attente_annoncee = false;
@@ -71,6 +80,7 @@ fn surveiller() -> Result<(), Box<dyn std::error::Error>> {
                     Ok(s4) => {
                         annoncer(&s4);
                         moniteur.oublier();
+                        decodeur.oublier();
                         boitier = Some(s4);
                         attente_annoncee = false;
                         derniere_panne.clear();
@@ -108,6 +118,13 @@ fn surveiller() -> Result<(), Box<dyn std::error::Error>> {
             match s4.lire(&mut tampon) {
                 Lecture::Blocs(paquet) => {
                     moniteur.absorber(paquet);
+                    if !brut {
+                        evenements.clear();
+                        decodeur.absorber(paquet, &mut evenements);
+                        for e in &evenements {
+                            moniteur.evenement(e);
+                        }
+                    }
                     moniteur.battre();
                 }
                 Lecture::Silence => moniteur.battre(),

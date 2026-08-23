@@ -9,8 +9,7 @@
 use std::collections::HashMap;
 use std::time::{Duration, Instant};
 
-/// caiaq/input.c : `#define TKS4_MSGBLOCK_SIZE 16`
-pub const TAILLE_BLOC: usize = 16;
+use crate::decode::{Cote, Evenement, ETIQUETTES, TAILLE_BLOC};
 
 pub struct Moniteur {
     debut: Instant,
@@ -18,10 +17,13 @@ pub struct Moniteur {
     blocs: u64,
     dernier_battement: Instant,
     blocs_au_battement: u64,
+    /// `false` = on compte et on bat la mesure, mais on n'affiche pas
+    /// l'hexadecimal : c'est le decodeur qui parle.
+    brut: bool,
 }
 
 impl Moniteur {
-    pub fn new() -> Moniteur {
+    pub fn new(brut: bool) -> Moniteur {
         let t = Instant::now();
         Moniteur {
             debut: t,
@@ -29,6 +31,7 @@ impl Moniteur {
             blocs: 0,
             dernier_battement: t,
             blocs_au_battement: 0,
+            brut,
         }
     }
 
@@ -36,8 +39,46 @@ impl Moniteur {
         self.blocs
     }
 
-    /// Decoupe le paquet en blocs de 16 o et affiche ceux qui ont change.
+    pub fn horloge(&self) -> f32 {
+        self.debut.elapsed().as_secs_f32()
+    }
+
+    /// Affiche un evenement decode, avec l'etiquette caiaq quand il y en a une.
+    pub fn evenement(&self, e: &Evenement) {
+        let t = self.horloge();
+        match *e {
+            Evenement::Bouton { index, enfonce } => println!(
+                "[{t:>7.2}s] bouton {index:>2}  {}",
+                if enfonce { "enfonce" } else { "relache" }
+            ),
+            Evenement::Analogique { index, valeur } => {
+                let etiquette = ETIQUETTES.get(index as usize).copied().unwrap_or("?");
+                println!("[{t:>7.2}s] axe {index:>2} {etiquette:<16} {valeur:>4} / 4095");
+            }
+            Evenement::Encodeur { index, cran } => {
+                println!("[{t:>7.2}s] encodeur {index}  cran {cran:>2} / 15")
+            }
+            Evenement::Jog {
+                cote,
+                position,
+                horodatage,
+            } => println!(
+                "[{t:>7.2}s] jog {}  position {position:>4} / 1023  (horodatage {horodatage:#06x})",
+                match cote {
+                    Cote::Gauche => "G",
+                    Cote::Droit => "D",
+                }
+            ),
+        }
+    }
+
+    /// Decoupe le paquet en blocs de 16 o, les compte, et n'affiche
+    /// l'hexadecimal que si le mode brut est actif.
     pub fn absorber(&mut self, paquet: &[u8]) {
+        if !self.brut {
+            self.blocs += (paquet.len() / TAILLE_BLOC) as u64;
+            return;
+        }
         let mut off = 0;
         while off + TAILLE_BLOC <= paquet.len() {
             let mut bloc = [0u8; TAILLE_BLOC];
