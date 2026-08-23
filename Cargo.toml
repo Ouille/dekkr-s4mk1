@@ -14,3 +14,6 @@ description = "Sonde de diagnostic USB pour Traktor Kontrol S4 MK1 (17cc:baff)"
 # « brew install libusb » necessaire, mais il faut un compilateur C
 # (sur macOS : xcode-select --install).
 rusb = { version = "0.9", features = ["vendored"] }
+# Arret propre sur Ctrl-C : relacher l'interface USB au lieu de la laisser
+# au noyau. MIT/Apache-2.0.
+ctrlc = "3.4"

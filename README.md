@@ -27,20 +27,28 @@ avec la fonctionnalité `vendored`, qui construit libusb depuis ses sources.
 
 S4 branché en USB. Le bloc secteur **n'est pas obligatoire** — le S4 MK1 fonctionne
 sur l'alimentation du bus ; le bloc ne fait que rendre les LED plus lumineuses et le
-casque un peu plus fort. La sonde affiche ce que le boîtier **déclare** consommer
-(`bMaxPower`) : si ce chiffre dépasse 500 mA, brancher le bloc devient pertinent.
+casque un peu plus fort. Le mode diagnostic affiche ce que le boîtier **déclare**
+consommer (`bMaxPower`) : au-delà de 500 mA, brancher le bloc devient pertinent.
 
 ```
-cargo run --release
+cargo build --release
+sudo ./target/release/sonde-s4mk1
 ```
 
-Si l'ouverture échoue avec une erreur d'accès :
+`sudo` sur le **binaire déjà compilé**, jamais `sudo cargo`, qui recompilerait en root
+et laisserait des fichiers inaccessibles dans `target/`.
 
-```
-sudo -E cargo run --release
-```
+### Deux modes
 
-Arrêt : `Ctrl-C`.
+| Commande | Ce qu'elle fait |
+|---|---|
+| `sonde-s4mk1` | **surveillance** : attend le boîtier, l'arme, affiche les contrôles, encaisse les débranchements. Ne s'arrête jamais seule. |
+| `sonde-s4mk1 --diagnostic` | dump du descripteur USB — interfaces, endpoints, alimentation — puis sort. |
+
+Le mode surveillance **ne dépend pas de l'ordre de branchement** : on peut le lancer
+avant le S4, débrancher, rebrancher — il se réarme seul. `Ctrl-C` rend l'interface
+proprement au lieu de la laisser au noyau, ce qui compte pour le programme suivant
+qui voudra la réserver.
 
 ---
 
