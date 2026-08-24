@@ -91,17 +91,45 @@ sans chevauchement, dans cet ordre chronologique :
 `caiaq` **{32, 33, 34, 35}** et **{16, 17, 18, 19}** — aucun axe ne traverse d'un
 groupe à l'autre. La partition FX1 / FX2 est réelle.
 
-🔴 **Ce que ça n'établit PAS, et il ne faut pas le combler par déduction.** Deux
-inconnues subsistent, et elles se compensent : *quel panneau physique a été balayé
-en premier*, et *dans quel sens les quatre potards ont été tournés*. Les deux
-groupes sont sortis **en numéro d'axe décroissant** — or pour les quatre groupes
-d'EQ, l'ordre interne de `caiaq` (filtre, bas, medium, haut) s'est révélé **exact**.
-Soit les potards ont été tournés dans l'autre sens, soit `caiaq` numérote le groupe
-FX à l'envers de ses groupes d'EQ. Rien dans ce relevé ne tranche.
+**Le PO a levé l'ambiguïté (2026-08-24) : le DRY/WET est le potard le plus à
+gauche du panneau de FX.** Le balayage ayant été fait de gauche à droite, le
+DRY/WET est donc le **premier** axe sorti de chaque groupe — soit **35** et
+**19**, et non 32 et 16.
 
-👉 **Le geste qui tranche : tourner SEUL le potard DRY/WET du panneau de FX de
-gauche.** Un axe répond, et il donne les deux réponses d'un coup — le panneau et
-le rôle. Tant que ce n'est pas fait, ces 8 lignes restent 🔶.
+🔴 **Ce sont les étiquettes de `caiaq` qui sont en défaut sur ce groupe**, pas
+le relevé. `decode.rs` annonce `32 = FX1 dry/wet … 35 = FX1 3` ; l'ordre réel est
+l'inverse. Attribution provisoire :
+
+| Axe | Rôle réel (provisoire) | | Axe | Rôle réel (provisoire) |
+| :-- | :--- | --- | :-- | :--- |
+| 35 | FX gauche — **dry/wet** | | 19 | FX droit — **dry/wet** |
+| 34 | FX gauche — 1 | | 18 | FX droit — 1 |
+| 33 | FX gauche — 2 | | 17 | FX droit — 2 |
+| 32 | FX gauche — 3 | | 16 | FX droit — 3 |
+
+## 🔑 Les numéros d'axe DÉCROISSENT de gauche à droite
+
+C'est ce qui rend l'attribution ci-dessus plus qu'une supposition : la même
+régularité s'observe maintenant sur **trois familles de contrôles indépendantes**.
+
+| Famille | De gauche à droite |
+| :--- | :--- |
+| faders de volume | 3, 2, 1, 0 |
+| potards d'EQ (chaque rangée) | 29, 25, 21, 13 |
+| potards d'un panneau de FX | 35, 34, 33, 32 |
+
+Le boîtier numérote ses entrées analogiques **de la droite vers la gauche**, par
+groupe. C'est aussi ce qui désigne le groupe {32-35} comme le panneau de
+**gauche** (numéros hauts) et {16-19} comme celui de droite.
+
+👉 **Confirmation à faire, et elle coûte un geste** : tourner **seul** le DRY/WET
+du panneau de gauche. S'il répond **35**, tout ce qui précède est acquis ; s'il
+répond 19, les panneaux sont inversés ; s'il répond 32, le balayage était de
+droite à gauche. Tant que ce n'est pas fait, ces 8 lignes restent 🔶.
+
+⚠️ **Ne pas corriger `ETIQUETTES` dans `decode.rs` avant cette confirmation** —
+une étiquette fausse est moins coûteuse qu'une étiquette fausse *qu'on croit
+validée*.
 
 ## Jogs — 10 bits (0 – 1023), circulaires
 
