@@ -156,8 +156,15 @@ fn annoncer(s4: &S4) {
                 s.entrees_analogiques, s.encodeurs, s.entrees_numeriques, s.sorties_numeriques
             );
             println!(
-                "   audio {} in / {} out  ·  MIDI {} in / {} out",
-                s.audio_in, s.audio_out, s.midi_in, s.midi_out
+                "   audio analogique {} in / {} out  ·  numerique {} in / {} out",
+                s.audio_in, s.audio_out, s.audio_num_in, s.audio_num_out
+            );
+            // `alignement` = `data_alignment` de caiaq_device_spec. caiaq s'en
+            // sert pour placer les trames audio : il faudra le relire a la
+            // SPEC-S4-004, autant l'avoir sous les yeux des maintenant.
+            println!(
+                "   MIDI {} in / {} out  ·  alignement des donnees {}",
+                s.midi_in, s.midi_out, s.alignement
             );
         }
         None => println!("   (GET_DEVICE_INFO sans reponse — non bloquant)"),
