@@ -30,14 +30,14 @@ et l'erreur ne se verrait qu'au premier mix.
 | 1 | volume canal B | fader de volume, **3ᵉ** | ✅ 2026-08-23 |
 | 2 | volume canal A | fader de volume, **2ᵉ** | ✅ 2026-08-23 |
 | 3 | volume canal C | fader de volume, **1ᵉʳ** (le plus à gauche) | ✅ 2026-08-23 |
-| 4 | volume de boucle | — | ⬜ au repos : 0 |
-| 5 | tempo gauche | — | ⬜ au repos : 2411 |
-| 6 | tempo droit | — | ⬜ au repos : 2056 |
+| 4 | volume de boucle | **aucun geste ne l'a réveillé** | 🔴 voir plus bas |
+| 5 | tempo gauche | fader de pitch, deck **gauche** | ✅ 2026-08-24 |
+| 6 | tempo droit | fader de pitch, deck **droit** | ✅ 2026-08-24 |
 | 7 | crossfader | crossfader | ✅ 2026-08-23 |
-| 8 | volume micro | — | ⬜ au repos : 394 |
-| 9 | cue mix | — | ⬜ au repos : 0 |
+| 8 | volume micro | potard **MIC** | ✅ 2026-08-24 |
+| 9 | cue mix | potard **CUE/MIX** du casque | ✅ 2026-08-24 |
 | 10 | proximité jog G | capteur de proximité du jog gauche | ✅ 2026-08-23 |
-| 11 | proximité jog D | — | ⬜ au repos : 3094 |
+| 11 | proximité jog D | capteur de proximité du jog **droit** — main posée, étendue 819 | ✅ 2026-08-24 |
 | 12 | EQ D filtre | potard FILTER, **4ᵉ** | ✅ 2026-08-24 |
 | 13 | EQ D bas | potard LOW, **4ᵉ** depuis la gauche | ✅ 2026-08-23 |
 | 14 | EQ D medium | potard MID, **4ᵉ** | ✅ 2026-08-24 |
@@ -57,12 +57,22 @@ et l'erreur ne se verrait qu'au premier mix.
 | 31 | EQ C haut | potard HI, **1ᵉʳ** | ✅ 2026-08-24 |
 | 32 – 35 | FX1 dry/wet, 1, 2, 3 | **1ᵉʳ panneau de FX balayé**, un des quatre potards | 🔶 groupe ✅, rôles ⬜ |
 
-**22 axes validés sur 36**, plus **8 groupés sans rôle attribué** (les FX). Aucun
-désaccord avec `caiaq` à ce jour. Les 16 axes d'EQ sont tous tenus.
+**27 axes validés sur 36**, plus **8 groupés sans rôle attribué** (les FX), plus
+**1 introuvable** (axe 4). Les 16 axes d'EQ sont tenus, ainsi que les deux faders
+de pitch, le MIC, le CUE/MIX et les deux capteurs de proximité.
 
-**Restent 6 axes jamais balayés** : 4 (volume de boucle), 5 (tempo gauche),
-6 (tempo droit), 8 (volume micro), 9 (cue mix), 11 (proximité jog droit).
-Aucun ne dépend d'une hypothèse d'ordre — un aller-retour chacun suffit.
+## 🔑 Deux règles d'orientation, et chacune a son domaine
+
+| Famille de contrôles | Sens des numéros | Vérifié sur |
+| :--- | :--- | :--- |
+| **rangées horizontales du mixeur** | **décroissent** de gauche à droite | volumes 3/2/1/0 · EQ 29/25/21/13 · FX 35/34/33/32 |
+| **paires gauche/droite des platines** | **croissent** de gauche à droite | jogs 10/11 · faders de pitch 5/6 |
+
+🔴 **Ne pas transposer l'une à l'autre.** La règle de décroissance appliquée aux
+faders de pitch aurait prédit `6 = gauche`, contre `caiaq` — et c'est `caiaq` qui
+a raison : le balayage du 2026-08-24 donne l'axe 5 de 7,6 s à 12 s (fader gauche,
+balayé en premier) puis l'axe 6 de 15,4 s à 23,7 s. *Une règle vérifiée trois fois
+inspire assez confiance pour être dégainée hors de son domaine.*
 
 ### Comment les 12 potards d'EQ ont été départagés
 
@@ -149,6 +159,32 @@ validée*.
 entièrement à construire.
 
 ---
+
+## 🔴 L'axe 4 ne répond à rien — et l'explication la plus probable est un TROU DE `caiaq`
+
+Le PO a tourné le potard du Loop Recorder : **aucun événement**, pas même une ligne
+au vidage initial (`derniers-axes.log`). L'axe 4 est le seul des 36 à n'avoir jamais
+donné signe de vie.
+
+⚠️ **« Le décodeur n'affiche rien » ne veut pas dire « le boîtier n'envoie rien ».**
+Notre décodeur ne lit que les offsets que `snd_usb_caiaq_tks4_dispatch` lit, et
+`caiaq` en **saute quatre** qui portent des valeurs vivantes :
+
+| Bloc | Offsets non lus par `caiaq` |
+| :-- | :--- |
+| 2 | 5 — mesuré à **2053**, soit un cran central : ce n'est pas du vide |
+| 3 | 1, 2, 5 |
+
+`caiaq` mappe **exactement 36 axes**, et le boîtier en **déclare 36** : les valeurs
+de ces quatre offsets sont donc des contrôles **hors du compte officiel**. Le potard
+du Loop Recorder est un excellent candidat — c'est une fonction Traktor tardive, que
+le pilote Linux de 2007 n'avait aucune raison d'exposer.
+
+👉 **Le geste qui tranche : `--brut`, et ne toucher QUE ce potard.** Le mode brut
+affiche les blocs octet par octet, encadrant ceux qui changent — il ne dépend
+d'aucune table. Si un octet bouge, le contrôle est vivant et c'est notre table
+qui est incomplète ; si rien ne bouge dans aucun bloc, alors seulement le contrôle
+est muet côté matériel.
 
 ## Observations à ne pas perdre
 
