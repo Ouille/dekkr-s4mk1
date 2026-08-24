@@ -30,7 +30,7 @@ et l'erreur ne se verrait qu'au premier mix.
 | 1 | volume canal B | fader de volume, **3ᵉ** | ✅ 2026-08-23 |
 | 2 | volume canal A | fader de volume, **2ᵉ** | ✅ 2026-08-23 |
 | 3 | volume canal C | fader de volume, **1ᵉʳ** (le plus à gauche) | ✅ 2026-08-23 |
-| 4 | volume de boucle | **aucun geste ne l'a réveillé** | 🔴 voir plus bas |
+| 4 | volume de boucle | potard du **Loop Recorder** — ⚠️ bloc 2 **offset 5**, pas 6 | ✅ 2026-08-24 |
 | 5 | tempo gauche | fader de pitch, deck **gauche** | ✅ 2026-08-24 |
 | 6 | tempo droit | fader de pitch, deck **droit** | ✅ 2026-08-24 |
 | 7 | crossfader | crossfader | ✅ 2026-08-23 |
@@ -63,9 +63,11 @@ et l'erreur ne se verrait qu'au premier mix.
 | 34 | ~~FX1 2~~ **FX G 1** | panneau de FX gauche, 2ᵉ | ✅ 2026-08-24 |
 | 35 | ~~FX1 3~~ **FX G dry/wet** | panneau de FX gauche, **1ᵉʳ** — 🎯 mesure directe | ✅ 2026-08-24 |
 
-**35 axes validés sur 36.** Seul l'axe 4 reste non confronté — aucun geste ne l'a
-jamais réveillé. Un seul désaccord avec `caiaq` sur les 35 : **le groupe des FX,
-numéroté à l'envers**.
+# ✅ **36 axes sur 36.** Tous confrontés au boîtier, un contrôle à la fois.
+
+**Deux désaccords avec `caiaq`**, tous deux mesurés : le **groupe des FX numéroté
+à l'envers** (étiquettes), et l'**axe 4 lu au mauvais offset** (table de dispatch —
+le plus grave des deux, car il rendait un contrôle invisible).
 
 ## 🔑 Deux règles d'orientation, et chacune a son domaine
 
@@ -168,11 +170,29 @@ entièrement à construire.
 
 ---
 
-## 🔴 L'axe 4 ne répond à rien — et l'explication la plus probable est un TROU DE `caiaq`
+## ✅ L'axe 4 était muet parce que `caiaq` le lit au mauvais endroit
 
-Le PO a tourné le potard du Loop Recorder : **aucun événement**, pas même une ligne
-au vidage initial (`derniers-axes.log`). L'axe 4 est le seul des 36 à n'avoir jamais
-donné signe de vie.
+Le potard du Loop Recorder ne produisait **aucun** événement, pas même au vidage
+initial — seul des 36 dans ce cas. Ce n'était pas le boîtier qui se taisait.
+
+**Mesure du 2026-08-24** (`releves/boucle-seule.log`, mode brut, potard tourné seul,
+rien d'autre touché) :
+
+| Bloc 2 | Valeurs observées | Lu par `caiaq` ? |
+| :--- | :--- | :--- |
+| **offset 5** | **9 → 4095**, course complète | ❌ non |
+| offset 6 | **0, et rien d'autre** | ✅ oui — c'est là que `caiaq` met l'axe 4 |
+
+Aucun autre offset, aucun bit de bouton, aucun encodeur n'a bougé. `AXES_PAR_BLOC`
+lit désormais l'**offset 5** pour l'axe 4, et un test dédié rougit si quelqu'un
+revient au mapping de `caiaq` — le fixture porte justement 2053 à l'offset 5 et 0
+à l'offset 6.
+
+🔑 **C'est le désaccord le plus grave des deux** : une étiquette fausse se corrige
+à la lecture, un offset faux rend un contrôle **invisible**. Et il serait passé
+inaperçu sans le mode brut, qui ne dépend d'aucune table.
+
+### Ce qui reste des trous de `caiaq`
 
 ⚠️ **« Le décodeur n'affiche rien » ne veut pas dire « le boîtier n'envoie rien ».**
 Notre décodeur ne lit que les offsets que lit `snd_usb_caiaq_tks4_dispatch`, et
@@ -188,17 +208,14 @@ vivantes. C'était une généralisation de la seule mesure dont je disposais : u
 relevé brut les montre tous à zéro sauf un. **Une mesure ne se propage pas à ses
 voisins** — même famille d'erreur que la « dérive de relâchement ».
 
-`caiaq` mappe **exactement 36 axes** et le boîtier en **déclare 36** : le bloc 2
-offset 5 est donc un contrôle **hors du compte officiel**. Le potard du Loop
-Recorder en est un bon candidat — fonction Traktor tardive, qu'un pilote de 2007
-n'avait pas à exposer. Noter aussi que `caiaq` place l'axe 4 sur le bloc 2
-**offset 6**, qui lui est **constamment à zéro** : les deux offsets voisins
-pourraient bien être intervertis.
+Il reste donc **cinq offsets non lus, tous à zéro en permanence** : bloc 3 offsets
+1, 2 et 5, bloc 7 offsets 6 et 7, auxquels s'ajoute le bloc 2 offset 6 abandonné
+par la correction ci-dessus. Aucun contrôle physique connu ne leur correspond, et
+les 36 axes déclarés par le boîtier sont désormais tous attribués.
 
-👉 **Reste à faire, et ça n'a pas encore été tenté** : `--brut`, ne toucher **que**
-le potard du Loop Recorder, et regarder le **bloc 2**. Si l'offset 5 bouge, la
-table est simplement décalée d'un cran ; si rien ne bouge nulle part, le contrôle
-est muet côté matériel et c'est un fait sur le boîtier, plus sur notre code.
+⚠️ Un emplacement à zéro reste indiscernable d'un contrôle au repos à zéro. Si un
+contrôle non identifié apparaît un jour, ce sont les six premiers endroits à
+regarder — en `--brut`.
 
 ## Observations à ne pas perdre
 

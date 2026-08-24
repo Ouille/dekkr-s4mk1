@@ -103,20 +103,24 @@ pub const ETIQUETTES: [&str; NB_ANALOGIQUES] = [
 /// Chaque couple `(offset, axe)` se lit : la valeur 16 bits gros-boutiste a
 /// l'octet `offset * 2` du bloc porte l'axe `axe`.
 ///
-/// 🔎 Les trous sont ceux de caiaq, pas les notres : le bloc 2 n'expose pas
-/// l'offset 5, le bloc 3 ni 1, ni 2, ni 5, le bloc 7 ni 6, ni 7.
+/// 🔴 **CETTE TABLE S'ECARTE DE `caiaq` SUR UN POINT, ET C'EST MESURE.**
+/// `caiaq` place l'axe 4 (potard du Loop Recorder) sur le **bloc 2 offset 6**.
+/// C'est faux sur ce boitier : l'offset 6 vaut **0 et rien d'autre** sur tous les
+/// releves bruts, tandis que l'**offset 5**, que `caiaq` ne lit pas, parcourt la
+/// course complete quand on tourne ce potard — mesure du 2026-08-24, potard tourne
+/// seul, `releves/boucle-seule.log` : etendue **9 → 4095**, et aucun autre offset,
+/// bouton ou encodeur ne bouge. La table lit donc l'offset **5**.
 ///
-/// ⚠️ **Un seul de ces six trous porte une valeur vivante : le bloc 2 offset 5**,
-/// mesure entre 2037 et 2057 — un cran central, donc un vrai controle que le
-/// pilote Linux laisse de cote. Les cinq autres sont **exactement a zero** dans
-/// tous les releves bruts (`releves/brut-boucle.log`).
+/// 🔎 Les autres trous de `caiaq` sont conserves : bloc 3 offsets 1, 2, 5 et
+/// bloc 7 offsets 6, 7. Tous **exactement a zero** dans les releves bruts — aucun
+/// controle connu ne leur correspond. Le bloc 2 offset 6 les rejoint.
 ///
-/// 🔴 J'avais d'abord ecrit que les quatre premiers portaient des valeurs
-/// vivantes, en generalisant la seule mesure que j'avais. Un releve brut les a
-/// tous montres a zero. *Une mesure ne se propage pas a ses voisins.*
+/// 🔴 J'avais d'abord annonce que *quatre* trous portaient des valeurs vivantes,
+/// en generalisant la seule mesure que j'avais. Un releve brut les a tous montres
+/// a zero sauf un. *Une mesure ne se propage pas a ses voisins.*
 const AXES_PAR_BLOC: [&[(usize, u8)]; 6] = [
-    // bloc 2
-    &[(1, 0), (2, 1), (3, 2), (4, 3), (6, 4), (7, 7)],
+    // bloc 2 — 🔴 l'axe 4 est a l'offset 5, PAS 6 : voir la note ci-dessus.
+    &[(1, 0), (2, 1), (3, 2), (4, 3), (5, 4), (7, 7)],
     // bloc 3
     &[(3, 6), (4, 5), (6, 8), (7, 9)],
     // bloc 4
@@ -356,8 +360,29 @@ mod tests {
             valeur: 0x0332
         }));
         // Les quatre faders de volume sont a zero, donc identiques au repos :
-        // rien a signaler. C'est le seul evenement du bloc.
-        assert_eq!(v.len(), 1);
+        // rien a signaler. Restent le crossfader et le potard de boucle.
+        assert_eq!(v.len(), 2);
+    }
+
+    /// 🔴 Barriere sur le SEUL ecart assume vis-a-vis de `caiaq`.
+    ///
+    /// `caiaq` lit l'axe 4 a l'offset 6 du bloc 2. Mesure du 2026-08-24 : cet
+    /// offset vaut 0 et rien d'autre, alors que l'offset 5 parcourt 9 → 4095
+    /// quand on tourne le potard du Loop Recorder, seul, boitier au repos.
+    ///
+    /// Le fixture porte **2053 a l'offset 5 et 0 a l'offset 6** : revenir au
+    /// mapping de `caiaq` fait disparaitre l'evenement, et ce test rougit.
+    #[test]
+    fn bloc_2_le_potard_de_boucle_est_a_l_offset_5_pas_6() {
+        let mut d = Decodeur::new();
+        let v = evts(&mut d, &BLOC2);
+        assert!(
+            v.contains(&Evenement::Analogique {
+                index: 4,
+                valeur: 0x0805
+            }),
+            "l'axe 4 doit lire l'offset 5 (2053), pas l'offset 6 (0) : {v:?}"
+        );
     }
 
     #[test]
