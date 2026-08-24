@@ -45,6 +45,24 @@ et laisserait des fichiers inaccessibles dans `target/`.
 | `sonde-s4mk1` | **surveillance** : attend le boîtier, l'arme, affiche les contrôles **décodés**, encaisse les débranchements. Ne s'arrête jamais seule. |
 | `sonde-s4mk1 --brut` | la même chose, mais en blocs hexadécimaux de 16 octets, octets modifiés encadrés. |
 | `sonde-s4mk1 --diagnostic` | dump du descripteur USB — interfaces, endpoints, alimentation — puis sort. |
+| `--journal <fichier>` | où écrire le journal (défaut : `sonde.log`) |
+| `--sans-journal` | console seule |
+
+### Le journal
+
+Tout ce qui s'affiche part **aussi** dans un fichier — une séance de relevé produit
+des milliers de lignes, impossibles à récupérer depuis le défilement du terminal.
+
+⚠️ `sonde.log` est **écrasé à chaque lancement**. Pour conserver une séance, la nommer :
+
+```
+sudo ./target/release/sonde-s4mk1 --journal faders-volume.log
+```
+
+Le fichier est écrit sur le disque **au battement, toutes les 3 secondes**, pas à
+chaque ligne : à ~600 blocs/s, un vidage par ligne ferait travailler le disque pour
+rien. Un `kill -9` peut donc coûter les 3 dernières secondes ; un `Ctrl-C` non, il
+passe par l'arrêt propre.
 
 En mode décodé, chaque geste produit une ligne lisible :
 

@@ -12,8 +12,12 @@
 
 mod affichage;
 mod decode;
+mod journal;
 mod usb;
 
+// `dire!` est `#[macro_export]`, donc deja dans la racine du crate : pas de
+// `use` ici, il entrerait en conflit avec lui-meme. Les sous-modules, eux,
+// doivent l'importer (`use crate::dire;`).
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
 use std::thread::sleep;
@@ -27,19 +31,55 @@ use usb::{Lecture, S4};
 /// couter, assez vif pour que le branchement paraisse immediat.
 const ATTENTE: Duration = Duration::from_millis(500);
 
+/// Journal par defaut. TRONQUE a chaque lancement : pour garder une seance,
+/// la nommer avec `--journal`.
+const JOURNAL_PAR_DEFAUT: &str = "sonde.log";
+
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    if std::env::args().any(|a| a == "--diagnostic" || a == "-d") {
-        return diagnostic();
-    }
-    if std::env::args().any(|a| a == "--help" || a == "-h") {
+    let args: Vec<String> = std::env::args().collect();
+
+    if args.iter().any(|a| a == "--help" || a == "-h") {
         println!("sonde-s4mk1 — Traktor Kontrol S4 MK1");
-        println!("  (sans argument)  surveille le boitier et affiche les controles decodes");
-        println!("  --brut           affiche les blocs de 16 octets en hexadecimal");
-        println!("  --diagnostic     dump du descripteur USB, puis sort");
+        println!("  (sans argument)     surveille le boitier et affiche les controles decodes");
+        println!("  --brut              affiche les blocs de 16 octets en hexadecimal");
+        println!("  --diagnostic        dump du descripteur USB, puis sort");
+        println!("  --journal <fichier> journal a ecrire (defaut : {JOURNAL_PAR_DEFAUT})");
+        println!("  --sans-journal      console seule");
         return Ok(());
     }
-    let brut = std::env::args().any(|a| a == "--brut" || a == "-b");
-    surveiller(brut)
+
+    // Tout ce qui suit part a la fois a l'ecran et dans le journal.
+    let chemin = if args.iter().any(|a| a == "--sans-journal") {
+        None
+    } else {
+        Some(
+            args.iter()
+                .position(|a| a == "--journal")
+                .and_then(|i| args.get(i + 1))
+                .cloned()
+                .unwrap_or_else(|| JOURNAL_PAR_DEFAUT.to_string()),
+        )
+    };
+    if let Some(c) = &chemin {
+        match journal::ouvrir(c) {
+            // 🔴 Annoncer le fichier AVANT d'ecrire dedans : sans ca, on ne
+            // sait pas ou est parti ce qu'on vient de lire a l'ecran.
+            Ok(()) => println!("Journal : {c}  (ecrase a chaque lancement)\n"),
+            Err(e) => println!("⚠️ journal {c} impossible ({e}) — console seule\n"),
+        }
+    }
+
+    let resultat = if args.iter().any(|a| a == "--diagnostic" || a == "-d") {
+        diagnostic()
+    } else {
+        surveiller(args.iter().any(|a| a == "--brut" || a == "-b"))
+    };
+
+    journal::vider();
+    if let Some(c) = &chemin {
+        println!("Journal ecrit dans {c}");
+    }
+    resultat
 }
 
 // ── Boucle de surveillance ────────────────────────────────────────────────────
@@ -56,11 +96,11 @@ fn surveiller(brut: bool) -> Result<(), Box<dyn std::error::Error>> {
         ctrlc::set_handler(move || stop.store(true, Ordering::SeqCst))?;
     }
 
-    println!("sonde-s4mk1 — surveillance ({:04x}:{:04x})", usb::VID, usb::PID);
+    dire!("sonde-s4mk1 — surveillance ({:04x}:{:04x})", usb::VID, usb::PID);
     if brut {
-        println!("Mode brut : blocs hexadecimaux, octets modifies encadres.");
+        dire!("Mode brut : blocs hexadecimaux, octets modifies encadres.");
     }
-    println!("Ctrl-C pour arreter.\n");
+    dire!("Ctrl-C pour arreter.\n");
 
     let mut boitier: Option<S4> = None;
     let mut moniteur = Moniteur::new(brut);
@@ -89,7 +129,7 @@ fn surveiller(brut: bool) -> Result<(), Box<dyn std::error::Error>> {
                         // Ne pas noyer la console en repetant la meme panne.
                         let texte = panne.to_string();
                         if texte != derniere_panne {
-                            println!("⛔ {texte}");
+                            dire!("⛔ {texte}");
                             derniere_panne = texte;
                         }
                         sleep(ATTENTE);
@@ -97,13 +137,13 @@ fn surveiller(brut: bool) -> Result<(), Box<dyn std::error::Error>> {
                 },
                 Ok(None) => {
                     if !attente_annoncee {
-                        println!("… S4 absent, en attente. Branche-le, ca se fera tout seul.");
+                        dire!("… S4 absent, en attente. Branche-le, ca se fera tout seul.");
                         attente_annoncee = true;
                     }
                     sleep(ATTENTE);
                 }
                 Err(e) => {
-                    println!("⛔ libusb ne repond pas : {e}");
+                    dire!("⛔ libusb ne repond pas : {e}");
                     sleep(ATTENTE);
                 }
             }
@@ -132,7 +172,7 @@ fn surveiller(brut: bool) -> Result<(), Box<dyn std::error::Error>> {
             }
         }
         if perdu {
-            println!("\n🔌 S4 debranche. Retour en attente.\n");
+            dire!("\n🔌 S4 debranche. Retour en attente.\n");
             // Le Drop rend l'interface ici, avant de repartir en recherche.
             boitier = None;
             attente_annoncee = false;
@@ -142,61 +182,61 @@ fn surveiller(brut: bool) -> Result<(), Box<dyn std::error::Error>> {
     // Ctrl-C : le Drop de `boitier` relache l'interface ici, pas a la mort du
     // processus. Ca compte pour l'application suivante qui voudra la reserver.
     drop(boitier);
-    println!("\nArret. {} blocs recus au total.", moniteur.blocs_recus());
+    dire!("\nArret. {} blocs recus au total.", moniteur.blocs_recus());
     Ok(())
 }
 
 fn annoncer(s4: &S4) {
-    println!("✅ S4 arme.");
+    dire!("✅ S4 arme.");
     match s4.spec {
         Some(s) => {
-            println!("   firmware {}  ·  sous-type {}", s.firmware, s.sous_type);
-            println!(
+            dire!("   firmware {}  ·  sous-type {}", s.firmware, s.sous_type);
+            dire!(
                 "   {} entrees analogiques · {} encodeurs · {} boutons · {} LED",
                 s.entrees_analogiques, s.encodeurs, s.entrees_numeriques, s.sorties_numeriques
             );
-            println!(
+            dire!(
                 "   audio analogique {} in / {} out  ·  numerique {} in / {} out",
                 s.audio_in, s.audio_out, s.audio_num_in, s.audio_num_out
             );
             // `alignement` = `data_alignment` de caiaq_device_spec. caiaq s'en
             // sert pour placer les trames audio : il faudra le relire a la
             // SPEC-S4-004, autant l'avoir sous les yeux des maintenant.
-            println!(
+            dire!(
                 "   MIDI {} in / {} out  ·  alignement des donnees {}",
                 s.midi_in, s.midi_out, s.alignement
             );
         }
-        None => println!("   (GET_DEVICE_INFO sans reponse — non bloquant)"),
+        None => dire!("   (GET_DEVICE_INFO sans reponse — non bloquant)"),
     }
-    println!("   Bouge un controle : seuls les blocs qui changent s'affichent.\n");
+    dire!("   Bouge un controle : seuls les blocs qui changent s'affichent.\n");
 }
 
 // ── Mode diagnostic ───────────────────────────────────────────────────────────
 
 fn diagnostic() -> Result<(), Box<dyn std::error::Error>> {
-    println!("sonde-s4mk1 — diagnostic\n");
+    dire!("sonde-s4mk1 — diagnostic\n");
 
-    println!("--- Tous les peripheriques USB vus par libusb ---");
+    dire!("--- Tous les peripheriques USB vus par libusb ---");
     let liste = usb::inventaire()?;
     for l in &liste {
-        println!("{l}");
+        dire!("{l}");
     }
-    println!("  ({} peripherique(s) au total)\n", liste.len());
+    dire!("  ({} peripherique(s) au total)\n", liste.len());
 
     let Some(device) = usb::chercher()? else {
-        println!("⛔ {:04x}:{:04x} ABSENT de la liste ci-dessus.", usb::VID, usb::PID);
-        println!("   La liste n'est pas filtree, donc :");
-        println!("   · d'autres appareils y figurent -> libusb fonctionne, c'est le S4");
-        println!("     qui ne s'enumere pas (cable, alimentation, boitier) ;");
-        println!("   · elle est vide -> c'est libusb ou les droits, et la sonde ne dit");
-        println!("     RIEN sur le S4. Reessayer avec sudo.");
+        dire!("⛔ {:04x}:{:04x} ABSENT de la liste ci-dessus.", usb::VID, usb::PID);
+        dire!("   La liste n'est pas filtree, donc :");
+        dire!("   · d'autres appareils y figurent -> libusb fonctionne, c'est le S4");
+        dire!("     qui ne s'enumere pas (cable, alimentation, boitier) ;");
+        dire!("   · elle est vide -> c'est libusb ou les droits, et la sonde ne dit");
+        dire!("     RIEN sur le S4. Reessayer avec sudo.");
         return Ok(());
     };
 
     let desc = device.device_descriptor()?;
-    println!("--- Descripteur ---");
-    println!(
+    dire!("--- Descripteur ---");
+    dire!(
         "  classe {:#04x}  sous-classe {:#04x}  protocole {:#04x}  configurations : {}",
         desc.class_code(),
         desc.sub_class_code(),
@@ -205,7 +245,7 @@ fn diagnostic() -> Result<(), Box<dyn std::error::Error>> {
     );
 
     let plan = usb::planifier(&device)?;
-    println!(
+    dire!(
         "  alimentation : {}  ·  courant demande : {} mA{}",
         if plan.self_powered {
             "AUTONOME (bloc secteur)"
@@ -220,15 +260,15 @@ fn diagnostic() -> Result<(), Box<dyn std::error::Error>> {
         }
     );
     for l in &plan.lignes {
-        println!("{l}");
+        dire!("{l}");
     }
 
-    println!("\n--- Verification des endpoints attendus par caiaq ---");
-    println!("  ep 0x01 OUT (commandes)      : {}", oui_non(plan.ep1_out));
-    println!("  ep 0x81 IN  (reponses)       : {}", oui_non(plan.ep1_in));
-    println!("  ep 0x84 IN  bulk (controles) : {}", oui_non(plan.ep4_bulk_in));
-    println!("  ep 0x08 OUT (LED)            : {}", oui_non(plan.ep8_out));
-    println!(
+    dire!("\n--- Verification des endpoints attendus par caiaq ---");
+    dire!("  ep 0x01 OUT (commandes)      : {}", oui_non(plan.ep1_out));
+    dire!("  ep 0x81 IN  (reponses)       : {}", oui_non(plan.ep1_in));
+    dire!("  ep 0x84 IN  bulk (controles) : {}", oui_non(plan.ep4_bulk_in));
+    dire!("  ep 0x08 OUT (LED)            : {}", oui_non(plan.ep8_out));
+    dire!(
         "  endpoints isochrones (audio) : {}",
         if plan.isochrones.is_empty() {
             "aucun".to_string()
@@ -236,16 +276,16 @@ fn diagnostic() -> Result<(), Box<dyn std::error::Error>> {
             plan.isochrones.join(", ")
         }
     );
-    println!("  interface HID dans le descripteur : {}", oui_non(plan.hid));
+    dire!("  interface HID dans le descripteur : {}", oui_non(plan.hid));
     match plan.porteur_ep4 {
-        Some((i, a)) => println!("  ep 0x84 porte par : interface {i}, alt setting {a}"),
-        None => println!("  ⛔ aucun alt setting ne porte l'ep 0x84"),
+        Some((i, a)) => dire!("  ep 0x84 porte par : interface {i}, alt setting {a}"),
+        None => dire!("  ⛔ aucun alt setting ne porte l'ep 0x84"),
     }
 
-    println!("\n--- Armement ---");
+    dire!("\n--- Armement ---");
     match S4::armer(device) {
         Ok(s4) => annoncer(&s4),
-        Err(panne) => println!("⛔ {panne}"),
+        Err(panne) => dire!("⛔ {panne}"),
     }
     Ok(())
 }

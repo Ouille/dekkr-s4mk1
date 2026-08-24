@@ -10,6 +10,7 @@ use std::collections::HashMap;
 use std::time::{Duration, Instant};
 
 use crate::decode::{Cote, Evenement, ETIQUETTES, TAILLE_BLOC};
+use crate::{dire, journal};
 
 pub struct Moniteur {
     debut: Instant,
@@ -47,22 +48,22 @@ impl Moniteur {
     pub fn evenement(&self, e: &Evenement) {
         let t = self.horloge();
         match *e {
-            Evenement::Bouton { index, enfonce } => println!(
+            Evenement::Bouton { index, enfonce } => dire!(
                 "[{t:>7.2}s] bouton {index:>2}  {}",
                 if enfonce { "enfonce" } else { "relache" }
             ),
             Evenement::Analogique { index, valeur } => {
                 let etiquette = ETIQUETTES.get(index as usize).copied().unwrap_or("?");
-                println!("[{t:>7.2}s] axe {index:>2} {etiquette:<16} {valeur:>4} / 4095");
+                dire!("[{t:>7.2}s] axe {index:>2} {etiquette:<16} {valeur:>4} / 4095");
             }
             Evenement::Encodeur { index, cran } => {
-                println!("[{t:>7.2}s] encodeur {index}  cran {cran:>2} / 15")
+                dire!("[{t:>7.2}s] encodeur {index}  cran {cran:>2} / 15")
             }
             Evenement::Jog {
                 cote,
                 position,
                 horodatage,
-            } => println!(
+            } => dire!(
                 "[{t:>7.2}s] jog {}  position {position:>4} / 1023  (horodatage {horodatage:#06x})",
                 match cote {
                     Cote::Gauche => "G",
@@ -112,15 +113,17 @@ impl Moniteur {
         let nouveaux = self.blocs - self.blocs_au_battement;
         let t = self.debut.elapsed().as_secs_f32();
         if nouveaux == 0 {
-            println!("[{t:>7.2}s] … plus aucun bloc ne parvient (total {})", self.blocs);
+            dire!("[{t:>7.2}s] … plus aucun bloc ne parvient (total {})", self.blocs);
         } else {
-            println!(
+            dire!(
                 "[{t:>7.2}s] … {nouveaux} blocs recus depuis 3 s, aucun changement (total {})",
                 self.blocs
             );
         }
         self.dernier_battement = Instant::now();
         self.blocs_au_battement = self.blocs;
+        // Le battement est aussi le rythme d'ecriture du journal sur le disque.
+        journal::vider();
     }
 
     /// Repartir de zero apres une reconnexion : les valeurs de reference du
@@ -142,7 +145,7 @@ impl Moniteur {
             })
             .collect();
 
-        println!(
+        dire!(
             "[{:>7.2}s] bloc {:>3}{}  {}",
             self.debut.elapsed().as_secs_f32(),
             id,
@@ -156,7 +159,7 @@ impl Moniteur {
             let enfonces: Vec<usize> = (0..96)
                 .filter(|i| ((bloc[4 + i / 8] >> (i % 8)) & 1) == 1)
                 .collect();
-            println!("                     boutons enfonces : {enfonces:?}");
+            dire!("                     boutons enfonces : {enfonces:?}");
         } else if id == 1 {
             // Les jogs sont sur 10 bits, pas 16 : l'affichage generique serait faux.
             let jog_g = bloc[9] as u16 | ((bloc[8] as u16 & 0x3) << 8);
@@ -172,7 +175,7 @@ impl Moniteur {
                 bloc[7] >> 4,
                 bloc[7] & 0xf,
             ];
-            println!("                     jog G={jog_g:<4} jog D={jog_d:<4}  encodeurs {enc:?}");
+            dire!("                     jog G={jog_g:<4} jog D={jog_d:<4}  encodeurs {enc:?}");
         } else {
             let vals: Vec<String> = (1..8)
                 .map(|o| {
@@ -180,7 +183,7 @@ impl Moniteur {
                     format!("o{o}={v:<5}")
                 })
                 .collect();
-            println!("                     {}", vals.join(" "));
+            dire!("                     {}", vals.join(" "));
         }
     }
 }
