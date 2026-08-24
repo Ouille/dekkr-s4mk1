@@ -7,5 +7,9 @@
 # macOS
 .DS_Store
 
-# journaux de seance
+# journaux de seance jetes a la racine
 *.log
+
+# ... mais releves/ est VERSIONNE : ce sont les mesures qui justifient chaque
+# ligne validee de MAPPING.md. Sans elles, la table n'est qu'une affirmation.
+!releves/*.log
