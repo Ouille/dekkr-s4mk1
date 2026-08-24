@@ -47,12 +47,18 @@ pub enum Evenement {
     },
 }
 
-/// Etiquette donnee par caiaq a chaque axe analogique.
+/// Etiquette de chaque axe analogique. **Source de verite : `MAPPING.md`.**
 ///
-/// ⚠️ **Non validees physiquement.** Ce sont les commentaires du pilote Linux,
-/// pas des mesures. La tache 4 de SPEC-S4-001 consiste precisement a les
-/// confronter au boitier, un controle a la fois. L'ordre des canaux du S4 est
-/// C-A-B-D de gauche a droite, ce qui rend les intuitions trompeuses.
+/// ✅ **35 des 36 confrontees au boitier** (tache 4, 2026-08-23/24), un controle
+/// a la fois. L'ordre des canaux du S4 est **C-A-B-D de gauche a droite**, ce qui
+/// rend les intuitions trompeuses : ne rien deduire ici sans mesure.
+///
+/// 🔴 **Les 8 axes de FX etaient FAUX dans caiaq** : il annonce `32 = FX1 dry/wet`
+/// puis 1, 2, 3, alors que l'ordre reel est inverse — mesure directe du 2026-08-24,
+/// le DRY/WET du panneau de gauche tourne seul fait bouger le **bloc 7 offset 5**,
+/// soit l'axe **35**. Seul desaccord avec caiaq sur les 35 axes verifies.
+///
+/// ⬜ **L'axe 4 reste le seul non confronte** : aucun geste ne l'a jamais reveille.
 pub const ETIQUETTES: [&str; NB_ANALOGIQUES] = [
     "volume canal D",       // 0
     "volume canal B",       // 1
@@ -70,10 +76,10 @@ pub const ETIQUETTES: [&str; NB_ANALOGIQUES] = [
     "EQ D bas",             // 13
     "EQ D medium",          // 14
     "EQ D haut",            // 15
-    "FX2 dry/wet",          // 16
-    "FX2 1",                // 17
-    "FX2 2",                // 18
-    "FX2 3",                // 19
+    "FX D 3",               // 16  ⚠️ caiaq disait « FX2 dry/wet » : ordre inverse
+    "FX D 2",               // 17
+    "FX D 1",               // 18
+    "FX D dry/wet",         // 19
     "EQ B filtre",          // 20
     "EQ B bas",             // 21
     "EQ B medium",          // 22
@@ -86,10 +92,10 @@ pub const ETIQUETTES: [&str; NB_ANALOGIQUES] = [
     "EQ C bas",             // 29
     "EQ C medium",          // 30
     "EQ C haut",            // 31
-    "FX1 dry/wet",          // 32
-    "FX1 1",                // 33
-    "FX1 2",                // 34
-    "FX1 3",                // 35
+    "FX G 3",               // 32  ⚠️ caiaq disait « FX1 dry/wet » : ordre inverse
+    "FX G 2",               // 33
+    "FX G 1",               // 34
+    "FX G dry/wet",         // 35  ✅ mesure directe : bloc 7 offset 5
 ];
 
 /// Correspondance bloc → axes, telle qu'ecrite dans `snd_usb_caiaq_tks4_dispatch`.
@@ -98,10 +104,16 @@ pub const ETIQUETTES: [&str; NB_ANALOGIQUES] = [
 /// l'octet `offset * 2` du bloc porte l'axe `axe`.
 ///
 /// 🔎 Les trous sont ceux de caiaq, pas les notres : le bloc 2 n'expose pas
-/// l'offset 5, le bloc 3 ni 1, ni 2, ni 5. Ces emplacements portent des
-/// valeurs vivantes dans les relevés (bloc 2 offset 5 = 2053, soit un cran
-/// central) : le pilote Linux laisse des controles de cote. A identifier
-/// pendant la tache 4.
+/// l'offset 5, le bloc 3 ni 1, ni 2, ni 5, le bloc 7 ni 6, ni 7.
+///
+/// ⚠️ **Un seul de ces six trous porte une valeur vivante : le bloc 2 offset 5**,
+/// mesure entre 2037 et 2057 — un cran central, donc un vrai controle que le
+/// pilote Linux laisse de cote. Les cinq autres sont **exactement a zero** dans
+/// tous les releves bruts (`releves/brut-boucle.log`).
+///
+/// 🔴 J'avais d'abord ecrit que les quatre premiers portaient des valeurs
+/// vivantes, en generalisant la seule mesure que j'avais. Un releve brut les a
+/// tous montres a zero. *Une mesure ne se propage pas a ses voisins.*
 const AXES_PAR_BLOC: [&[(usize, u8)]; 6] = [
     // bloc 2
     &[(1, 0), (2, 1), (3, 2), (4, 3), (6, 4), (7, 7)],

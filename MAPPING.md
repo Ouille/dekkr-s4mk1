@@ -42,7 +42,10 @@ et l'erreur ne se verrait qu'au premier mix.
 | 13 | EQ D bas | potard LOW, **4ᵉ** depuis la gauche | ✅ 2026-08-23 |
 | 14 | EQ D medium | potard MID, **4ᵉ** | ✅ 2026-08-24 |
 | 15 | EQ D haut | potard HI, **4ᵉ** | ✅ 2026-08-24 |
-| 16 – 19 | FX2 dry/wet, 1, 2, 3 | **2ᵉ panneau de FX balayé**, un des quatre potards | 🔶 groupe ✅, rôles ⬜ |
+| 16 | ~~FX2 dry/wet~~ **FX D 3** | panneau de FX **droit**, 4ᵉ potard | ✅ 2026-08-24 |
+| 17 | ~~FX2 1~~ **FX D 2** | panneau de FX droit, 3ᵉ | ✅ 2026-08-24 |
+| 18 | ~~FX2 2~~ **FX D 1** | panneau de FX droit, 2ᵉ | ✅ 2026-08-24 |
+| 19 | ~~FX2 3~~ **FX D dry/wet** | panneau de FX droit, **1ᵉʳ** (le plus à gauche) | ✅ 2026-08-24 |
 | 20 | EQ B filtre | potard FILTER, **3ᵉ** | ✅ 2026-08-24 |
 | 21 | EQ B bas | potard LOW, **3ᵉ** | ✅ 2026-08-23 |
 | 22 | EQ B medium | potard MID, **3ᵉ** | ✅ 2026-08-24 |
@@ -55,11 +58,14 @@ et l'erreur ne se verrait qu'au premier mix.
 | 29 | EQ C bas | potard LOW, **1ᵉʳ** | ✅ 2026-08-23 |
 | 30 | EQ C medium | potard MID, **1ᵉʳ** | ✅ 2026-08-24 |
 | 31 | EQ C haut | potard HI, **1ᵉʳ** | ✅ 2026-08-24 |
-| 32 – 35 | FX1 dry/wet, 1, 2, 3 | **1ᵉʳ panneau de FX balayé**, un des quatre potards | 🔶 groupe ✅, rôles ⬜ |
+| 32 | ~~FX1 dry/wet~~ **FX G 3** | panneau de FX **gauche**, 4ᵉ potard | ✅ 2026-08-24 |
+| 33 | ~~FX1 1~~ **FX G 2** | panneau de FX gauche, 3ᵉ | ✅ 2026-08-24 |
+| 34 | ~~FX1 2~~ **FX G 1** | panneau de FX gauche, 2ᵉ | ✅ 2026-08-24 |
+| 35 | ~~FX1 3~~ **FX G dry/wet** | panneau de FX gauche, **1ᵉʳ** — 🎯 mesure directe | ✅ 2026-08-24 |
 
-**27 axes validés sur 36**, plus **8 groupés sans rôle attribué** (les FX), plus
-**1 introuvable** (axe 4). Les 16 axes d'EQ sont tenus, ainsi que les deux faders
-de pitch, le MIC, le CUE/MIX et les deux capteurs de proximité.
+**35 axes validés sur 36.** Seul l'axe 4 reste non confronté — aucun geste ne l'a
+jamais réveillé. Un seul désaccord avec `caiaq` sur les 35 : **le groupe des FX,
+numéroté à l'envers**.
 
 ## 🔑 Deux règles d'orientation, et chacune a son domaine
 
@@ -132,14 +138,16 @@ Le boîtier numérote ses entrées analogiques **de la droite vers la gauche**, 
 groupe. C'est aussi ce qui désigne le groupe {32-35} comme le panneau de
 **gauche** (numéros hauts) et {16-19} comme celui de droite.
 
-👉 **Confirmation à faire, et elle coûte un geste** : tourner **seul** le DRY/WET
-du panneau de gauche. S'il répond **35**, tout ce qui précède est acquis ; s'il
-répond 19, les panneaux sont inversés ; s'il répond 32, le balayage était de
-droite à gauche. Tant que ce n'est pas fait, ces 8 lignes restent 🔶.
+### ✅ Confirmé le 2026-08-24, en mode brut
 
-⚠️ **Ne pas corriger `ETIQUETTES` dans `decode.rs` avant cette confirmation** —
-une étiquette fausse est moins coûteuse qu'une étiquette fausse *qu'on croit
-validée*.
+Le DRY/WET du panneau de gauche tourné **seul**, sur un relevé où rien d'autre n'a
+bougé (`releves/brut-boucle.log`) : **un seul offset de tout le boîtier a réagi**,
+le **bloc 7 offset 5** — soit l'axe **35**. Les 41 autres offsets, les 96 bits de
+boutons et les 11 encodeurs sont restés au niveau du bruit.
+
+C'est la mesure la plus propre du dossier : une seule variable, une seule réponse.
+`ETIQUETTES` est corrigé dans `decode.rs` — **seul désaccord avec `caiaq` sur les
+35 axes vérifiés**.
 
 ## Jogs — 10 bits (0 – 1023), circulaires
 
@@ -167,24 +175,30 @@ au vidage initial (`derniers-axes.log`). L'axe 4 est le seul des 36 à n'avoir j
 donné signe de vie.
 
 ⚠️ **« Le décodeur n'affiche rien » ne veut pas dire « le boîtier n'envoie rien ».**
-Notre décodeur ne lit que les offsets que `snd_usb_caiaq_tks4_dispatch` lit, et
-`caiaq` en **saute quatre** qui portent des valeurs vivantes :
+Notre décodeur ne lit que les offsets que lit `snd_usb_caiaq_tks4_dispatch`, et
+`caiaq` en **saute six** : bloc 2 offset 5, bloc 3 offsets 1, 2, 5, bloc 7 offsets
+6 et 7.
 
-| Bloc | Offsets non lus par `caiaq` |
-| :-- | :--- |
-| 2 | 5 — mesuré à **2053**, soit un cran central : ce n'est pas du vide |
-| 3 | 1, 2, 5 |
+**Un seul de ces six porte une valeur vivante : le bloc 2 offset 5**, mesuré entre
+**2037 et 2057** — un cran central, donc un vrai contrôle mis de côté par le pilote
+Linux. Les cinq autres sont **exactement à zéro** dans tout le relevé brut.
 
-`caiaq` mappe **exactement 36 axes**, et le boîtier en **déclare 36** : les valeurs
-de ces quatre offsets sont donc des contrôles **hors du compte officiel**. Le potard
-du Loop Recorder est un excellent candidat — c'est une fonction Traktor tardive, que
-le pilote Linux de 2007 n'avait aucune raison d'exposer.
+🔴 *Correction.* J'avais écrit que **quatre** de ces trous portaient des valeurs
+vivantes. C'était une généralisation de la seule mesure dont je disposais : un
+relevé brut les montre tous à zéro sauf un. **Une mesure ne se propage pas à ses
+voisins** — même famille d'erreur que la « dérive de relâchement ».
 
-👉 **Le geste qui tranche : `--brut`, et ne toucher QUE ce potard.** Le mode brut
-affiche les blocs octet par octet, encadrant ceux qui changent — il ne dépend
-d'aucune table. Si un octet bouge, le contrôle est vivant et c'est notre table
-qui est incomplète ; si rien ne bouge dans aucun bloc, alors seulement le contrôle
-est muet côté matériel.
+`caiaq` mappe **exactement 36 axes** et le boîtier en **déclare 36** : le bloc 2
+offset 5 est donc un contrôle **hors du compte officiel**. Le potard du Loop
+Recorder en est un bon candidat — fonction Traktor tardive, qu'un pilote de 2007
+n'avait pas à exposer. Noter aussi que `caiaq` place l'axe 4 sur le bloc 2
+**offset 6**, qui lui est **constamment à zéro** : les deux offsets voisins
+pourraient bien être intervertis.
+
+👉 **Reste à faire, et ça n'a pas encore été tenté** : `--brut`, ne toucher **que**
+le potard du Loop Recorder, et regarder le **bloc 2**. Si l'offset 5 bouge, la
+table est simplement décalée d'un cran ; si rien ne bouge nulle part, le contrôle
+est muet côté matériel et c'est un fait sur le boîtier, plus sur notre code.
 
 ## Observations à ne pas perdre
 
