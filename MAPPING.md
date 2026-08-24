@@ -42,10 +42,7 @@ et l'erreur ne se verrait qu'au premier mix.
 | 13 | EQ D bas | potard LOW, **4ᵉ** depuis la gauche | ✅ 2026-08-23 |
 | 14 | EQ D medium | potard MID, **4ᵉ** | ✅ 2026-08-24 |
 | 15 | EQ D haut | potard HI, **4ᵉ** | ✅ 2026-08-24 |
-| 16 | FX2 dry/wet | — | ⬜ au repos : 0 |
-| 17 | FX2 1 | — | ⬜ au repos : 2063 |
-| 18 | FX2 2 | — | ⬜ au repos : 1965 |
-| 19 | FX2 3 | — | ⬜ au repos : 2931 |
+| 16 – 19 | FX2 dry/wet, 1, 2, 3 | **2ᵉ panneau de FX balayé**, un des quatre potards | 🔶 groupe ✅, rôles ⬜ |
 | 20 | EQ B filtre | potard FILTER, **3ᵉ** | ✅ 2026-08-24 |
 | 21 | EQ B bas | potard LOW, **3ᵉ** | ✅ 2026-08-23 |
 | 22 | EQ B medium | potard MID, **3ᵉ** | ✅ 2026-08-24 |
@@ -58,13 +55,14 @@ et l'erreur ne se verrait qu'au premier mix.
 | 29 | EQ C bas | potard LOW, **1ᵉʳ** | ✅ 2026-08-23 |
 | 30 | EQ C medium | potard MID, **1ᵉʳ** | ✅ 2026-08-24 |
 | 31 | EQ C haut | potard HI, **1ᵉʳ** | ✅ 2026-08-24 |
-| 32 | FX1 dry/wet | — | ⬜ au repos : 600 |
-| 33 | FX1 1 | — | ⬜ au repos : 1248 |
-| 34 | FX1 2 | — | ⬜ au repos : 3047 |
-| 35 | FX1 3 | — | ⬜ au repos : 1345 |
+| 32 – 35 | FX1 dry/wet, 1, 2, 3 | **1ᵉʳ panneau de FX balayé**, un des quatre potards | 🔶 groupe ✅, rôles ⬜ |
 
-**22 axes validés sur 36.** Aucun désaccord avec `caiaq` à ce jour. Les 16 axes
-d'EQ sont tous tenus ; les 14 restants ne dépendent d'aucune hypothèse d'ordre.
+**22 axes validés sur 36**, plus **8 groupés sans rôle attribué** (les FX). Aucun
+désaccord avec `caiaq` à ce jour. Les 16 axes d'EQ sont tous tenus.
+
+**Restent 6 axes jamais balayés** : 4 (volume de boucle), 5 (tempo gauche),
+6 (tempo droit), 8 (volume micro), 9 (cue mix), 11 (proximité jog droit).
+Aucun ne dépend d'une hypothèse d'ordre — un aller-retour chacun suffit.
 
 ### Comment les 12 potards d'EQ ont été départagés
 
@@ -79,6 +77,31 @@ FILTER, puis MID, puis HI. Dépouillement par étendue de valeurs :
 C'est cette double exclusion qui fait la preuve : non seulement chaque potard
 attendu a répondu, mais **aucun autre** n'a bougé. Un balayage qui aurait aussi
 réveillé un axe voisin aurait signalé un couplage ou une étiquette décalée.
+
+### 🔶 Les 8 potards de FX : groupés, pas encore attribués
+
+Relevé `releves/fx-et-restants.log` (2026-08-24). Huit balayages nets, ~4 s chacun,
+sans chevauchement, dans cet ordre chronologique :
+
+```
+35 → 34 → 33 → 32     puis     19 → 18 → 17 → 16
+```
+
+**Ce que ça établit** : les deux panneaux de FX correspondent bien aux deux groupes
+`caiaq` **{32, 33, 34, 35}** et **{16, 17, 18, 19}** — aucun axe ne traverse d'un
+groupe à l'autre. La partition FX1 / FX2 est réelle.
+
+🔴 **Ce que ça n'établit PAS, et il ne faut pas le combler par déduction.** Deux
+inconnues subsistent, et elles se compensent : *quel panneau physique a été balayé
+en premier*, et *dans quel sens les quatre potards ont été tournés*. Les deux
+groupes sont sortis **en numéro d'axe décroissant** — or pour les quatre groupes
+d'EQ, l'ordre interne de `caiaq` (filtre, bas, medium, haut) s'est révélé **exact**.
+Soit les potards ont été tournés dans l'autre sens, soit `caiaq` numérote le groupe
+FX à l'envers de ses groupes d'EQ. Rien dans ce relevé ne tranche.
+
+👉 **Le geste qui tranche : tourner SEUL le potard DRY/WET du panneau de FX de
+gauche.** Un axe répond, et il donne les deux réponses d'un coup — le panneau et
+le rôle. Tant que ce n'est pas fait, ces 8 lignes restent 🔶.
 
 ## Jogs — 10 bits (0 – 1023), circulaires
 
@@ -117,21 +140,34 @@ cranté se détend après qu'on l'a lâché. **C'était faux, et l'explication t
 au seul fait que je venais de les toucher.**
 
 Le relevé du 2026-08-24 tranche : l'axe **34** (FX1 2), que personne n'a approché
-de la séance, a émis **cinq fois** entre 3032 et 3047 — 15 pas d'amplitude. L'axe
-**11** (proximité jog D) de même, 11 pas. Ni l'un ni l'autre n'a été manipulé. La
-cause n'est donc pas mécanique : c'est du **bruit de conversion**, présent en
-permanence sur tous les axes, à hauteur de **10 à 15 pas sur 4095**.
+de la séance, a émis **cinq fois** entre 3032 et 3047. L'axe **11** de même. Ni
+l'un ni l'autre n'a été manipulé : la cause n'est pas mécanique, c'est du **bruit
+de conversion**.
 
-Conséquence directe pour le pont MIDI (tâche 5) : un pont qui réémet à chaque
-changement de valeur brute **enverra des CC sur des potards que personne ne
-touche**. Un pas de CC 7 bits vaut 4095/127 ≈ **32 pas bruts**, donc le bruit
-seul ne franchit pas un pas — sauf quand la position de repos tombe près d'une
-frontière, où le CC oscillera indéfiniment entre deux valeurs voisines.
+**Amplitude mesurée sur les 26 axes restés au repos** (`fx-et-restants.log`) :
+**14 à 27 pas sur 4095**, maximum sur les axes **10 et 11** — les capteurs de
+proximité des jogs, capacitifs, donc les plus bruyants. Aucun axe au repos n'est
+en dessous de 14.
 
-**Il faut une hystérésis**, pas seulement un « n'émettre que si le 7 bits
-change » : exiger que la valeur brute dépasse la frontière d'au moins **16 pas**
-avant de basculer. À vérifier au banc, l'amplitude mesurée ici ne vaut que pour
-ce boîtier et cette séance.
+🔑 **Le bruit se concentre dans le vidage initial, pas dans la durée.** Au premier
+geste, le boîtier redonne l'état des 36 axes **trois fois en 60 ms**, et les trois
+copies diffèrent du bruit. Ensuite, pendant les balayages, **aucun autre axe n'a
+émis** : le boîtier applique son propre seuil quand il est déjà en émission. Le
+problème est donc **borné** — une rafale au démarrage, plus quelques émissions
+isolées, et non un bruit de fond continu.
+
+Conséquence pour le pont MIDI (tâche 5) : un pont qui réémet à chaque changement
+de valeur brute **enverra une centaine de CC sur des potards que personne ne
+touche**, à chaque reprise d'émission. Un pas de CC 7 bits vaut 4095/127 ≈ **32
+pas bruts**, à peine au-dessus des 27 mesurés — la marge est trop mince pour se
+contenter d'un « n'émettre que si la valeur 7 bits change ».
+
+**Il faut une hystérésis d'un pas de CC entier (32 pas bruts)** : n'émettre que
+lorsque la valeur brute s'est écartée d'au moins 32 de **la dernière valeur
+émise**, pas de la frontière la plus proche. Coût pour le DJ : 0,8 % de course
+morte, imperceptible. ⚠️ Les 27 pas valent pour ce boîtier et ces deux séances —
+si un autre exemplaire mesure davantage, c'est le seuil qu'il faut relever, pas
+la règle.
 
 **`GET_DEVICE_INFO` est resté sans réponse le 2026-08-24**, alors qu'il avait
 répondu la veille (firmware 2575). Même boîtier, même binaire. C'est donc
