@@ -13,6 +13,8 @@
 mod affichage;
 mod decode;
 mod journal;
+mod midi;
+mod sortie;
 mod usb;
 
 // `dire!` est `#[macro_export]`, donc deja dans la racine du crate : pas de
@@ -21,10 +23,12 @@ mod usb;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
 use std::thread::sleep;
-use std::time::Duration;
+use std::time::{Duration, Instant};
 
 use affichage::Moniteur;
 use decode::{Decodeur, Evenement};
+use midi::{MessageMidi, Traducteur};
+use sortie::PortMidi;
 use usb::{Lecture, S4};
 
 /// Rythme d'attente quand le boitier est absent. Assez lent pour ne rien
@@ -40,8 +44,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     if args.iter().any(|a| a == "--help" || a == "-h") {
         println!("sonde-s4mk1 — Traktor Kontrol S4 MK1");
-        println!("  (sans argument)     surveille le boitier et affiche les controles decodes");
-        println!("  --brut              affiche les blocs de 16 octets en hexadecimal");
+        println!("  (sans argument)     pont MIDI + affichage des controles decodes");
+        println!("  --sans-midi         n'ouvre aucun port MIDI (sonde seule)");
+        println!("  --brut              blocs de 16 octets en hexadecimal, SANS pont MIDI");
         println!("  --diagnostic        dump du descripteur USB, puis sort");
         println!("  --journal <fichier> journal a ecrire (defaut : {JOURNAL_PAR_DEFAUT})");
         println!("  --sans-journal      console seule");
@@ -72,7 +77,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let resultat = if args.iter().any(|a| a == "--diagnostic" || a == "-d") {
         diagnostic()
     } else {
-        surveiller(args.iter().any(|a| a == "--brut" || a == "-b"))
+        let brut = args.iter().any(|a| a == "--brut" || a == "-b");
+        // Le mode brut n'assemble aucun evenement : il n'y a rien a traduire.
+        let midi = !brut && !args.iter().any(|a| a == "--sans-midi");
+        surveiller(brut, midi)
     };
 
     journal::vider();
@@ -89,7 +97,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 ///
 /// 🔑 Le programme ne depend PAS de l'ordre de branchement. On peut le lancer
 /// avant le S4, le debrancher, le rebrancher : il se rearme seul.
-fn surveiller(brut: bool) -> Result<(), Box<dyn std::error::Error>> {
+fn surveiller(brut: bool, midi: bool) -> Result<(), Box<dyn std::error::Error>> {
     let stop = Arc::new(AtomicBool::new(false));
     {
         let stop = Arc::clone(&stop);
@@ -100,12 +108,30 @@ fn surveiller(brut: bool) -> Result<(), Box<dyn std::error::Error>> {
     if brut {
         dire!("Mode brut : blocs hexadecimaux, octets modifies encadres.");
     }
+
+    // 🔴 Ouvrir le port AVANT d'attendre le boitier : le port virtuel doit
+    // exister au moment ou Chrome enumere le MIDI, sinon DekkR ne verra rien
+    // tant qu'il n'aura pas ete relance.
+    let mut port: Option<PortMidi> = None;
+    if midi {
+        match PortMidi::ouvrir() {
+            Ok(p) => {
+                dire!("🎹 Port MIDI virtuel « {} » ouvert.", sortie::NOM_PORT);
+                port = Some(p);
+            }
+            // Perdre le MIDI ne justifie pas de perdre le diagnostic.
+            Err(e) => dire!("⚠️ MIDI indisponible ({e}) — sonde seule."),
+        }
+    }
     dire!("Ctrl-C pour arreter.\n");
 
+    let depart = Instant::now();
     let mut boitier: Option<S4> = None;
     let mut moniteur = Moniteur::new(brut);
     let mut decodeur = Decodeur::new();
+    let mut traducteur = Traducteur::new();
     let mut evenements: Vec<Evenement> = Vec::new();
+    let mut messages: Vec<MessageMidi> = Vec::new();
     let mut tampon = [0u8; usb::EP4_BUFSIZE];
     // Ne pas repeter « en attente » a chaque tour de boucle.
     let mut attente_annoncee = false;
@@ -121,6 +147,10 @@ fn surveiller(brut: bool) -> Result<(), Box<dyn std::error::Error>> {
                         annoncer(&s4);
                         moniteur.oublier();
                         decodeur.oublier();
+                        // Les valeurs du boitier precedent n'ont plus cours —
+                        // et un encodeur dont on ignore le cran de depart ne
+                        // doit pas produire une rotation au rebranchement.
+                        traducteur.oublier();
                         boitier = Some(s4);
                         attente_annoncee = false;
                         derniere_panne.clear();
@@ -161,8 +191,16 @@ fn surveiller(brut: bool) -> Result<(), Box<dyn std::error::Error>> {
                     if !brut {
                         evenements.clear();
                         decodeur.absorber(paquet, &mut evenements);
+                        let ms = depart.elapsed().as_millis() as u64;
                         for e in &evenements {
                             moniteur.evenement(e);
+                            if let Some(p) = &mut port {
+                                messages.clear();
+                                traducteur.traduire(e, ms, &mut messages);
+                                for m in &messages {
+                                    p.emettre(m);
+                                }
+                            }
                         }
                     }
                     moniteur.battre();

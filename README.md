@@ -38,15 +38,36 @@ sudo ./target/release/sonde-s4mk1
 `sudo` sur le **binaire déjà compilé**, jamais `sudo cargo`, qui recompilerait en root
 et laisserait des fichiers inaccessibles dans `target/`.
 
-### Deux modes
+### Les modes
 
 | Commande | Ce qu'elle fait |
 |---|---|
-| `sonde-s4mk1` | **surveillance** : attend le boîtier, l'arme, affiche les contrôles **décodés**, encaisse les débranchements. Ne s'arrête jamais seule. |
-| `sonde-s4mk1 --brut` | la même chose, mais en blocs hexadécimaux de 16 octets, octets modifiés encadrés. |
+| `sonde-s4mk1` | **pont MIDI** : ouvre le port virtuel `DekkR S4 MK1`, attend le boîtier, l'arme, traduit les contrôles et les affiche. Ne s'arrête jamais seule. |
+| `sonde-s4mk1 --sans-midi` | la même surveillance, **sans ouvrir de port MIDI** — c'est le mode des relevés. |
+| `sonde-s4mk1 --brut` | blocs hexadécimaux de 16 octets, octets modifiés encadrés. **Jamais de MIDI** : ce mode n'assemble aucun événement. |
 | `sonde-s4mk1 --diagnostic` | dump du descripteur USB — interfaces, endpoints, alimentation — puis sort. |
 | `--journal <fichier>` | où écrire le journal (défaut : `sonde.log`) |
 | `--sans-journal` | console seule |
+
+⚠️ Le port virtuel est ouvert **avant** d'attendre le boîtier : Chrome énumère le MIDI
+à l'ouverture de la page, et un port apparu après coup resterait invisible jusqu'au
+rechargement. ⚠️ **macOS et Linux uniquement** — l'API MIDI de Windows ne sait pas créer
+de port virtuel ; l'outil y retombe proprement en sonde seule.
+
+### Ce qui part sur le fil
+
+| Canal | Type | Contenu |
+|---|---|---|
+| 0 | Note On, note = **numéro de bit** | les boutons — voir `MAPPING.md` |
+| 2 | CC, cc = numéro d'axe | les 34 axes ordinaires, 12 bits → 7 |
+| 3 / 4 | Pitch bend 14 bits | jog gauche / droit |
+| 5 / 6 | Pitch bend 14 bits | fader de tempo gauche / droit |
+| 7 | Note On, deux notes par encodeur | rotation des 9 encodeurs : `index×2` vers le haut, `index×2+1` vers le bas |
+
+Un **relâchement n'émet rien** : `MidiEngine.ts` ignore les Note Off. Et cinq bits sont
+**muets par construction** — 20 et 23 (fermés au repos, sans contrôle physique connu),
+85, 86 et 87 (interrupteurs du panneau arrière). Sans cette exclusion, chaque connexion
+enverrait quatre Note On que personne n'a demandées.
 
 ### Le journal
 

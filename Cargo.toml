@@ -17,3 +17,7 @@ rusb = { version = "0.9", features = ["vendored"] }
 # Arret propre sur Ctrl-C : relacher l'interface USB au lieu de la laisser
 # au noyau. MIT/Apache-2.0.
 ctrlc = "3.4"
+# Port MIDI virtuel. MIT — compatible avec la GPL-2.0 de cet utilitaire.
+# ⚠️ `create_virtual` n'existe que sur Unix (CoreMIDI, ALSA) : sur Windows,
+# l'ouverture du port echoue proprement et l'outil retombe en sonde seule.
+midir = "0.9"
