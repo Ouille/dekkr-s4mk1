@@ -1,0 +1,61 @@
+sonde-s4mk1 — surveillance (17cc:baff)
+Ctrl-C pour arreter.
+
+✅ S4 arme.
+   (GET_DEVICE_INFO sans reponse — non bloquant)
+   Bouge un controle : seuls les blocs qui changent s'affichent.
+
+[   3.04s] … plus aucun bloc ne parvient (total 0)
+[   4.89s] bouton 19  enfonce
+[   4.89s] bouton 20  enfonce
+[   4.89s] bouton 23  enfonce
+[   4.89s] bouton 86  enfonce
+[   4.89s] bouton 87  enfonce
+[   4.89s] jog G  position    2 / 1023  (horodatage 0x0003)
+[   4.89s] jog D  position    1 / 1023  (horodatage 0x0007)
+[   4.89s] encodeur 1  cran  4 / 15
+[   4.89s] encodeur 3  cran 15 / 15
+[   4.89s] encodeur 4  cran 15 / 15
+[   4.89s] encodeur 5  cran 15 / 15
+[   4.89s] encodeur 6  cran 14 / 15
+[   4.89s] encodeur 7  cran 15 / 15
+[   4.89s] encodeur 8  cran 15 / 15
+[   5.07s] bouton 19  relache
+[   6.17s] … 4 blocs recus depuis 3 s, aucun changement (total 4)
+[   9.17s] … plus aucun bloc ne parvient (total 4)
+[  12.23s] … plus aucun bloc ne parvient (total 4)
+[  13.32s] bouton 18  enfonce
+[  13.56s] bouton 18  relache
+[  15.48s] … 4 blocs recus depuis 3 s, aucun changement (total 8)
+[  18.55s] … plus aucun bloc ne parvient (total 8)
+[  20.70s] bouton 70  enfonce
+[  20.94s] bouton 70  relache
+[  21.72s] … 4 blocs recus depuis 3 s, aucun changement (total 12)
+[  24.77s] … plus aucun bloc ne parvient (total 12)
+[  27.43s] bouton 71  enfonce
+[  27.65s] bouton 71  relache
+[  27.92s] … 4 blocs recus depuis 3 s, aucun changement (total 16)
+[  31.18s] … plus aucun bloc ne parvient (total 16)
+[  34.25s] … plus aucun bloc ne parvient (total 16)
+[  34.59s] bouton 94  enfonce
+[  34.78s] bouton 94  relache
+[  37.50s] … 4 blocs recus depuis 3 s, aucun changement (total 20)
+[  40.41s] bouton 95  enfonce
+[  40.60s] bouton 95  relache
+[  40.60s] … 4 blocs recus depuis 3 s, aucun changement (total 24)
+[  43.63s] … plus aucun bloc ne parvient (total 24)
+[  46.69s] … plus aucun bloc ne parvient (total 24)
+[  47.17s] bouton 36  enfonce
+[  47.39s] bouton 36  relache
+[  49.85s] … 4 blocs recus depuis 3 s, aucun changement (total 28)
+[  52.91s] … plus aucun bloc ne parvient (total 28)
+[  54.88s] bouton 43  enfonce
+[  55.10s] bouton 43  relache
+[  56.17s] … 4 blocs recus depuis 3 s, aucun changement (total 32)
+[  59.23s] … plus aucun bloc ne parvient (total 32)
+[  61.23s] bouton 42  enfonce
+[  61.42s] bouton 42  relache
+[  62.48s] … 4 blocs recus depuis 3 s, aucun changement (total 36)
+[  65.50s] … plus aucun bloc ne parvient (total 36)
+
+Arret. 36 blocs recus au total.
