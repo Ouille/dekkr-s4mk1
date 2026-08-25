@@ -166,9 +166,13 @@ C'est la mesure la plus propre du dossier : une seule variable, une seule répon
 | 3 | **SYNC**, deck gauche | ✅ 2026-08-25 |
 | 5 | **CUE**, deck gauche | ✅ 2026-08-25 |
 | 7 | **PLAY**, deck gauche | ✅ 2026-08-23, reconfirmé le 2026-08-25 |
+| 57 | **SHIFT**, deck droit | ✅ 2026-08-25 |
+| 59 | **SYNC**, deck droit | ✅ 2026-08-25 |
+| 61 | **CUE**, deck droit | ✅ 2026-08-25 |
+| 63 | **PLAY**, deck droit | ✅ 2026-08-25 |
 | 20, 23, 86, 87 | interrupteurs, **fermés au repos** — position, pas appui | 🔎 à identifier |
 
-**4 boutons nommés sur 96.** `caiaq` n'en nomme aucun : cette colonne est
+**8 boutons nommés sur 96.** `caiaq` n'en nomme aucun : cette colonne est
 entièrement à construire, il n'y a rien à porter.
 
 ### ✅ Rangée transport du deck gauche, 2026-08-25
@@ -187,20 +191,44 @@ passer pour un cinquième interrupteur fermé au repos. Il est **relâché** 0,3
 plus tard, et `decode.rs` fige la liste des fermés au repos à exactement
 `[20, 23, 86, 87]` : c'est bien un appui, celui qui a réveillé le flux.
 
-### 🔎 Hypothèse non testée : entrelacement gauche / droite
+### ✅ Rangée transport du deck droit, 2026-08-25
 
-Les quatre bits sont **impairs et régulièrement espacés**. Lecture possible :
-les pairs {0, 2, 4, 6} portent la même rangée sur le deck **droit**.
+`releves/boutons-transport-droit.log`. Même rangée, **même ordre** sur la façade
+(pas de miroir, confirmé par le PO avant le geste) : SHIFT, SYNC, CUE, PLAY.
+Bits neufs, dans cet ordre : **57, 59, 61, 63**. Rien d'autre n'a bougé. Même
+détail qu'à gauche — le premier bit arrive dans le paquet du vidage initial,
+c'est l'appui qui réveille le flux, et il est relâché 0,35 s plus tard.
 
-⛔ **Ne rien inscrire dans la table sur cette base.** Cette hypothèse
-**contredit** la règle des platines du 2026-08-24 — les paires gauche/droite
-*croissent* (jogs 10/11, faders de pitch 5/6), ce qui donnerait au deck gauche
-les numéros **bas**. L'une des deux doit céder, et aucun raisonnement ne dira
-laquelle. Lecture concurrente, tout aussi recevable : {0, 2, 4, 6} sont une
-**seconde rangée du deck gauche**.
+### ⛔ Hypothèse d'entrelacement gauche/droite — RÉFUTÉE par la mesure
 
-👉 Discriminant : relever la rangée transport du deck **droit**, quatre boutons
-dans le même ordre. C'est la prochaine passe.
+J'avais prédit **{0, 2, 4, 6}** pour le deck droit, sur la seule foi de la parité
+des quatre bits de gauche. **C'est faux** : les deux rangées sont impaires et
+espacées de 2, `1,3,5,7` d'un côté, `57,59,61,63` de l'autre. Les bits pairs
+{0, 2, 4, 6} ne sont pas le deck droit et **restent à trouver**.
+
+🔑 **Et la règle des platines n'était pas menacée** : gauche = bits **bas**,
+droite = bits **hauts**, donc les paires **croissent**, comme les jogs (10/11) et
+les faders de pitch (5/6). La contradiction n'existait que dans mon hypothèse ;
+la règle gagne une confirmation de plus au lieu d'une exception.
+
+⚠️ *Coût évité* : inscrite sans test, cette hypothèse aurait posé les quatre
+boutons du deck droit sur `0, 2, 4, 6` — faux sur les quatre, et invisible
+jusqu'au premier mix. **La parité d'une suite de quatre nombres ne dit rien de
+la structure ; deux relevés le disent.**
+
+### 🔎 Structure du masque — constaté, non expliqué
+
+L'écart entre les deux rangées est de **56 bits, soit exactement 7 octets**, à
+position identique dans l'octet : le masque commençant à `buf[4]`, la rangée
+gauche occupe l'octet **4**, la droite l'octet **11**. Les quatre interrupteurs
+fermés au repos se répartissent dans le même sens — **20 et 23** dans la moitié
+basse, **86 et 87** dans la moitié haute.
+
+👉 Lecture de travail : **bits bas = moitié gauche, bits hauts = moitié droite**.
+Deux relevés la soutiennent, aucun ne la teste. Prochaine passe discriminante :
+une **seconde rangée du deck gauche**, qui doit tomber dans les bits bas — et
+qui dira si les rangées s'entrelacent dans le même octet (bits pairs 0, 2, 4, 6)
+ou si chaque rangée a son octet (bits 8 à 15).
 
 ---
 
