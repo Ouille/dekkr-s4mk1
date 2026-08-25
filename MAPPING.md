@@ -162,17 +162,36 @@ C'est la mesure la plus propre du dossier : une seule variable, une seule répon
 
 | Bit | Contrôle physique | Statut |
 | :-- | :--- | :--- |
+| 0 | hot cue **1**, deck gauche | ✅ 2026-08-25 |
 | 1 | **SHIFT**, deck gauche | ✅ 2026-08-25 |
+| 2 | hot cue **2**, deck gauche | ✅ 2026-08-25 |
 | 3 | **SYNC**, deck gauche | ✅ 2026-08-25 |
+| 4 | hot cue **3**, deck gauche | ✅ 2026-08-25 |
 | 5 | **CUE**, deck gauche | ✅ 2026-08-25 |
+| 6 | hot cue **4**, deck gauche | ✅ 2026-08-25 |
 | 7 | **PLAY**, deck gauche | ✅ 2026-08-23, reconfirmé le 2026-08-25 |
+| 8 | bascule de deck **A / C**, gauche | ✅ 2026-08-25 |
+| 9 | sample **1**, deck gauche | ✅ 2026-08-25 |
+| 10 | **LOOP IN**, deck gauche | ✅ 2026-08-25 |
+| 11 | sample **2**, deck gauche | ✅ 2026-08-25 |
+| 12 | **LOOP OUT**, deck gauche | ✅ 2026-08-25 |
+| 13 | sample **3**, deck gauche | ✅ 2026-08-25 |
+| 14 | **LOAD**, deck gauche | ✅ 2026-08-25 |
+| 15 | sample **4**, deck gauche | ✅ 2026-08-25 |
+| 16 | **offset bas**, deck gauche | ✅ 2026-08-25 |
+| 17 | **offset haut**, deck gauche | ✅ 2026-08-25 |
 | 57 | **SHIFT**, deck droit | ✅ 2026-08-25 |
 | 59 | **SYNC**, deck droit | ✅ 2026-08-25 |
 | 61 | **CUE**, deck droit | ✅ 2026-08-25 |
 | 63 | **PLAY**, deck droit | ✅ 2026-08-25 |
+| 65 | FX **gauche** — bouton du 1ᵉʳ potard (le plus à gauche) | ✅ 2026-08-25 |
+| 66 | FX **gauche** — bouton du 2ᵉ potard | ✅ 2026-08-25 |
+| 67 | FX **gauche** — bouton du 3ᵉ potard | ✅ 2026-08-25 |
+| 68 | FX **gauche** — bouton du 4ᵉ potard | ✅ 2026-08-25 |
+| 69 | FX **gauche** — **MODE** | ✅ 2026-08-25 |
 | 20, 23, 86, 87 | interrupteurs, **fermés au repos** — position, pas appui | 🔎 à identifier |
 
-**8 boutons nommés sur 96.** `caiaq` n'en nomme aucun : cette colonne est
+**27 boutons nommés sur 96.** `caiaq` n'en nomme aucun : cette colonne est
 entièrement à construire, il n'y a rien à porter.
 
 ### ✅ Rangée transport du deck gauche, 2026-08-25
@@ -215,6 +234,54 @@ la règle gagne une confirmation de plus au lieu d'une exception.
 boutons du deck droit sur `0, 2, 4, 6` — faux sur les quatre, et invisible
 jusqu'au premier mix. **La parité d'une suite de quatre nombres ne dit rien de
 la structure ; deux relevés le disent.**
+
+### ✅ Les 19 boutons restants du deck gauche, 2026-08-25
+
+`releves/boutons-deck-gauche.log`. Six rangées annoncées **avant** le geste avec
+leur compte (5 / 2 / 2 / 2 / 4 / 4), une **pause de 5 s entre chaque** : le
+journal imprime alors « plus aucun bloc ne parvient », ce qui **découpe les
+rangées sans ambiguïté**. Résultat : **19 bits neufs, 19 attendus**, répartis
+exactement selon l'annonce, et **aucun autre bit n'a bougé**.
+
+🔑 *Le séparateur ne coûte rien et il est déjà là.* Une passe de 19 boutons est
+aussi sûre qu'une passe de 4 dès lors qu'on peut situer chaque rangée dans le
+journal — sans les silences, une erreur au 3ᵉ bouton décalerait les 16 suivants
+sans laisser de trace.
+
+### ✅ Le corps du deck est un damier — bits 0 à 17, sans trou
+
+| Octet | Bits pairs | Bits impairs |
+| :--- | :--- | :--- |
+| 4 | hot cues 1-4 (0, 2, 4, 6) | transport SHIFT/SYNC/CUE/PLAY (1, 3, 5, 7) |
+| 5 | A/C, LOOP IN, LOOP OUT, LOAD (8, 10, 12, 14) | samples 1-4 (9, 11, 13, 15) |
+| 6 | offset bas (16) | offset haut (17) |
+
+C'est l'explication des `1, 3, 5, 7` du transport : la rangée voisine occupait
+les bits pairs depuis le début. **Deux rangées se partagent un octet en damier**,
+elles ne s'empilent pas octet par octet.
+
+### ⛔ Deux prédictions du 2026-08-25, toutes deux prises en défaut
+
+**① « La bascule A/C est un interrupteur à accrochage »** — faux. Le bit 8 est
+**relâché** 0,15 s après l'appui : bouton ordinaire. **Les quatre bits fermés au
+repos (20, 23, 86, 87) restent entiers et non identifiés.**
+
+**② « Les 19 bits tomberont dans les bits bas »** — faux : la rangée FX sort à
+**65-69**, au-dessus du transport droit. 🔑 *L'erreur vient du découpage, pas du
+boîtier* : j'ai rangé le panneau FX avec le deck **parce que le PO me l'a décrit
+en haut du deck**, alors que le boîtier le classe avec le **mixeur**. Or la règle
+du mixeur était déjà mesurée le 24/08 sur les axes — **décroissante de gauche à
+droite** (FX gauche = 32-35, FX droit = 16-19). Les deux règles d'orientation du
+24/08 valent donc aussi pour les boutons : **corps de platine croissant, mixeur
+décroissant**.
+👉 Conséquence testable : les 5 boutons du panneau FX **droit** doivent sortir à
+des bits **strictement inférieurs à 65**.
+
+🔴 **L'écart de +56 ne se généralise pas.** Vérifié sur la seule rangée de
+transport (1,3,5,7 → 57,59,61,63). Appliqué au deck entier, il placerait la
+bascule A/C droite à 64 et LOOP IN droit à 66 — **or 65 à 69 appartiennent au FX
+gauche**. *Une régularité vérifiée sur une rangée ne dit rien de la rangée
+voisine.*
 
 ### 🔎 Structure du masque — constaté, non expliqué
 
@@ -281,13 +348,19 @@ regarder — en `--brut`.
 
 ## Observations à ne pas perdre
 
-**Le boîtier ne parle qu'en cas de changement, et bloc par bloc.** Relevé du
-2026-08-25 : rien pendant les 9 premières secondes (« plus aucun bloc ne
-parvient »), puis **16 blocs en tout** pour 4 appuis — soit les 8 fronts du
-bloc 0 plus quelques blocs de jog. **Aucun bloc d'axe n'est arrivé de toute la
-séance.** Conséquence pour le pont MIDI : l'état initial d'un contrôle n'est
-connu qu'après son premier mouvement, et un pont qui attend un état complet au
-démarrage attendrait indéfiniment.
+**🔴 Le démarrage du flux n'est pas déterministe — trois relevés, deux
+comportements.** Les deux relevés de transport (2026-08-25) ne reçoivent **rien**
+pendant 7 à 9 s après l'armement, puis **16 blocs en tout** pour 4 appuis : les 8
+fronts du bloc 0 et quelques blocs de jog, **aucun bloc d'axe de toute la
+séance**. Le relevé du deck gauche, même binaire et même boîtier, reçoit à
+**2,80 s un état complet non sollicité** — 36 axes, jogs, encodeurs, interrupteurs
+— **avant tout geste**.
+
+Aucune des deux formes n'est « la » bonne, et la cause n'est pas identifiée
+(état laissé par la séance précédente ?). ⚠️ **Conséquence pour le pont MIDI
+(tâche 5) : ne présumer ni l'une ni l'autre.** Un pont qui attend un état complet
+au démarrage attendrait indéfiniment dans le premier cas ; un pont qui suppose
+n'avoir rien reçu recevrait 36 axes d'un coup dans le second.
 
 **Les bits 86 et 87 existent alors que le boîtier déclare 78 entrées numériques.**
 Ils sont à 1 au repos. Le décodeur garde donc les 96 bits alloués par `caiaq` :
@@ -315,11 +388,16 @@ proximité des jogs, capacitifs, donc les plus bruyants. Aucun axe au repos n'es
 en dessous de 14.
 
 🔑 **Le bruit se concentre dans le vidage initial, pas dans la durée.** Au premier
-geste **analogique**, le boîtier redonne l'état des 36 axes **trois fois en 60 ms**,
-et les trois copies diffèrent du bruit. *(Nuance apportée le 2026-08-25 : j'avais
-écrit « au premier geste ». Le relevé des boutons montre 4 appuis sur 4 secondes
-sans qu'un seul bloc d'axe n'arrive — la rafale est déclenchée par le bloc
-concerné, pas par le réveil du flux.)* Ensuite, pendant les balayages, **aucun autre axe n'a
+geste, le boîtier redonne l'état des 36 axes **trois fois en 60 ms**, et les trois
+copies diffèrent du bruit.
+
+🔴 **Correction du 2026-08-25 — ce paragraphe a été nuancé à tort dans la journée.**
+Après le relevé du transport (4 appuis, 4 secondes, **aucun bloc d'axe**), j'avais
+écrit que la rafale était déclenchée par le premier geste *analogique*. Le relevé
+du deck gauche, trois heures plus tard, la montre arrivée **à 2,80 s, complète,
+sans qu'aucun geste n'ait eu lieu** — et **une seule fois**, pas trois. Trois
+séances, deux comportements, cause non identifiée. *J'ai remplacé une
+généralisation par une autre, à partir d'un seul relevé à chaque fois.* Ensuite, pendant les balayages, **aucun autre axe n'a
 émis** : le boîtier applique son propre seuil quand il est déjà en émission. Le
 problème est donc **borné** — une rafale au démarrage, plus quelques émissions
 isolées, et non un bruit de fond continu.
