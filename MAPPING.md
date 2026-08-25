@@ -180,18 +180,44 @@ C'est la mesure la plus propre du dossier : une seule variable, une seule répon
 | 15 | sample **4**, deck gauche | ✅ 2026-08-25 |
 | 16 | **offset bas**, deck gauche | ✅ 2026-08-25 |
 | 17 | **offset haut**, deck gauche | ✅ 2026-08-25 |
+| 40 | **offset bas**, deck droit | ✅ 2026-08-25 |
+| 41 | **offset haut**, deck droit | ✅ 2026-08-25 |
+| 48 | bascule de deck **B / D**, droit | ✅ 2026-08-25 |
+| 49 | sample **1**, deck droit | ✅ 2026-08-25 |
+| 50 | **LOOP IN**, deck droit | ✅ 2026-08-25 |
+| 51 | sample **2**, deck droit | ✅ 2026-08-25 |
+| 52 | **LOOP OUT**, deck droit | ✅ 2026-08-25 |
+| 53 | sample **3**, deck droit | ✅ 2026-08-25 |
+| 54 | **LOAD**, deck droit | ✅ 2026-08-25 |
+| 55 | sample **4**, deck droit | ✅ 2026-08-25 |
+| 56 | hot cue **1**, deck droit | ✅ 2026-08-25 |
 | 57 | **SHIFT**, deck droit | ✅ 2026-08-25 |
+| 58 | hot cue **2**, deck droit | ✅ 2026-08-25 |
 | 59 | **SYNC**, deck droit | ✅ 2026-08-25 |
+| 60 | hot cue **3**, deck droit | ✅ 2026-08-25 |
 | 61 | **CUE**, deck droit | ✅ 2026-08-25 |
+| 62 | hot cue **4**, deck droit | ✅ 2026-08-25 |
 | 63 | **PLAY**, deck droit | ✅ 2026-08-25 |
 | 65 | FX **gauche** — bouton du 1ᵉʳ potard (le plus à gauche) | ✅ 2026-08-25 |
 | 66 | FX **gauche** — bouton du 2ᵉ potard | ✅ 2026-08-25 |
 | 67 | FX **gauche** — bouton du 3ᵉ potard | ✅ 2026-08-25 |
 | 68 | FX **gauche** — bouton du 4ᵉ potard | ✅ 2026-08-25 |
 | 69 | FX **gauche** — **MODE** | ✅ 2026-08-25 |
+| 89 | FX **droit** — bouton du 1ᵉʳ potard (le plus à gauche) | ✅ 2026-08-25 |
+| 90 | FX **droit** — bouton du 2ᵉ potard | ✅ 2026-08-25 |
+| 91 | FX **droit** — bouton du 3ᵉ potard | ✅ 2026-08-25 |
+| 92 | FX **droit** — bouton du 4ᵉ potard | ✅ 2026-08-25 |
+| 93 | FX **droit** — **MODE** | ✅ 2026-08-25 |
 | 20, 23, 86, 87 | interrupteurs, **fermés au repos** — position, pas appui | 🔎 à identifier |
 
-**27 boutons nommés sur 96.** `caiaq` n'en nomme aucun : cette colonne est
+**46 boutons nommés sur 96.**
+
+⚠️ **Sur le deck droit, LOAD et la bascule de deck sont en miroir** de ceux du
+deck gauche : LOAD est à gauche de la bascule. L'attribution ne repose donc pas
+sur le seul ordre d'appui — **deux arguments indépendants convergent** : le PO a
+appuyé 54 puis 48 en allant de gauche à droite sur cette rangée inversée, *et*
+l'octet 10 réplique la structure de l'octet 5, où la bascule occupe le bit bas
+et LOAD le bit haut. `caiaq` n'en nomme aucun : cette colonne est
 entièrement à construire, il n'y a rien à porter.
 
 ### ✅ Rangée transport du deck gauche, 2026-08-25
@@ -275,7 +301,8 @@ droite** (FX gauche = 32-35, FX droit = 16-19). Les deux règles d'orientation d
 24/08 valent donc aussi pour les boutons : **corps de platine croissant, mixeur
 décroissant**.
 👉 Conséquence testable : les 5 boutons du panneau FX **droit** doivent sortir à
-des bits **strictement inférieurs à 65**.
+des bits **strictement inférieurs à 65**. — ⛔ **RÉFUTÉ le jour même : 89-93.**
+Voir « la règle décroissante du mixeur ne vaut que pour les axes », plus bas.
 
 🔴 **L'écart de +56 ne se généralise pas.** Vérifié sur la seule rangée de
 transport (1,3,5,7 → 57,59,61,63). Appliqué au deck entier, il placerait la
@@ -283,19 +310,64 @@ bascule A/C droite à 64 et LOOP IN droit à 66 — **or 65 à 69 appartiennent 
 gauche**. *Une régularité vérifiée sur une rangée ne dit rien de la rangée
 voisine.*
 
+### ✅ Les 19 boutons du deck droit, 2026-08-25
+
+`releves/boutons-deck-droit.log`. Même protocole, mêmes six rangées, mêmes
+pauses : **19 bits neufs, 19 attendus**, aux six bonnes coupures, rien d'autre.
+
+🎯 **Prédiction confirmée au bit près : hot cues droits = 56, 58, 60, 62.**
+Annoncée avant le geste, à partir du seul damier de l'octet 4. **Le damier est
+une loi du boîtier**, pas une particularité du deck gauche.
+
+⛔ **Prédiction réfutée : « le FX droit sortira sous 65 ».** Il sort à **89-93**,
+donc *au-dessus* du FX gauche (65-69). Les boutons sont **croissants de gauche à
+droite partout** — corps de platine, transport, panneaux FX.
+
+🔴 **La règle décroissante du mixeur ne vaut que pour les AXES.** Même panneau FX
+physique : ses potards sont numérotés décroissants de gauche à droite (32-35 à
+gauche, 16-19 à droite), ses boutons croissants (65-69 à gauche, 89-93 à droite).
+*Une règle d'orientation appartient à la **famille de contrôle**, pas à la zone de
+la façade.* Troisième transposition abusive d'une orientation dans ce dossier —
+les deux premières le 2026-08-24.
+
+### 🔑 Le masque est un miroir — et il désigne où chercher le mixeur
+
+| Rangée | Deck gauche | Deck droit | Somme |
+| :--- | :--- | :--- | :--- |
+| hot cues + transport | octet **4** | octet **11** | 15 |
+| bascule/IN/OUT/LOAD + samples | octet **5** | octet **10** | 15 |
+| offsets | octet **6** | octet **9** | 15 |
+| panneau FX | octet **12** | octet **15** | — |
+
+Les deux decks sont **symétriques autour du milieu du masque**, et les positions
+*à l'intérieur* de l'octet sont **identiques** des deux côtés (hot cue 1 = bit 0
+de son octet, à gauche comme à droite). Ce n'est donc pas un décalage constant :
+l'écart gauche→droite vaut +56 sur les hot cues, +40 sur les samples, +24 sur les
+offsets. **C'est l'ordre des octets qui s'inverse, pas les bits.**
+
+👉 **Prédiction pour la passe du mixeur** : il reste entre les deux miroirs les
+**octets 7 et 8, soit les bits 24 à 39**. C'est là que les boutons du mixeur
+doivent tomber. Les bits 18, 19, 21, 22 (fin de l'octet 6) et 42-47 (fin de
+l'octet 9) restent également libres.
+
 ### 🔎 Structure du masque — constaté, non expliqué
 
-L'écart entre les deux rangées est de **56 bits, soit exactement 7 octets**, à
-position identique dans l'octet : le masque commençant à `buf[4]`, la rangée
-gauche occupe l'octet **4**, la droite l'octet **11**. Les quatre interrupteurs
-fermés au repos se répartissent dans le même sens — **20 et 23** dans la moitié
-basse, **86 et 87** dans la moitié haute.
+L'écart entre les deux rangées de transport est de **56 bits, soit exactement 7
+octets**, à position identique dans l'octet : le masque commençant à `buf[4]`, la
+rangée gauche occupe l'octet **4**, la droite l'octet **11**.
 
-👉 Lecture de travail : **bits bas = moitié gauche, bits hauts = moitié droite**.
-Deux relevés la soutiennent, aucun ne la teste. Prochaine passe discriminante :
-une **seconde rangée du deck gauche**, qui doit tomber dans les bits bas — et
-qui dira si les rangées s'entrelacent dans le même octet (bits pairs 0, 2, 4, 6)
-ou si chaque rangée a son octet (bits 8 à 15).
+⛔ **La lecture de travail « bits bas = moitié gauche, bits hauts = moitié
+droite » est FAUSSE**, et le relevé du deck gauche l'a montrée le jour même : le
+panneau FX **gauche** occupe les bits **65-69**. Elle est remplacée par la
+symétrie en miroir des octets, décrite plus haut — qui rend compte des deux decks
+*et* des deux panneaux FX. Les deux questions qu'elle laissait ouvertes sont
+tranchées : les rangées **s'entrelacent en damier dans un même octet**, et
+l'écart gauche→droite **n'est pas constant**.
+
+⚠️ Les quatre interrupteurs fermés au repos, eux, **ne suivent pas le miroir** :
+20 et 23 tombent dans l'octet 6 (celui des offsets gauches), 86 et 87 dans
+l'octet 14, dont l'octet symétrique 13 ne porte rien de connu. Aucun des quatre
+n'a été identifié à ce jour.
 
 ---
 
