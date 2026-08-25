@@ -180,6 +180,8 @@ C'est la mesure la plus propre du dossier : une seule variable, une seule répon
 | 15 | sample **4**, deck gauche | ✅ 2026-08-25 |
 | 16 | **offset bas**, deck gauche | ✅ 2026-08-25 |
 | 17 | **offset haut**, deck gauche | ✅ 2026-08-25 |
+| 18 | **clic** de l'encodeur de boucle **droit**, deck gauche | ✅ 2026-08-25 |
+| 19 | **clic** de l'encodeur de boucle **gauche**, deck gauche | ✅ 2026-08-25 |
 | 24 | **SIZE** (Loop Recorder) | ✅ 2026-08-25 |
 | 25 | **REC** (Loop Recorder) | ✅ 2026-08-25 |
 | 26 | **UNDO** (Loop Recorder) | ✅ 2026-08-25 |
@@ -192,8 +194,11 @@ C'est la mesure la plus propre du dossier : une seule variable, une seule répon
 | 33 | **CUE** casque, **2ᵉ** voie (canal A) | ✅ 2026-08-25 |
 | 34 | **CUE** casque, **3ᵉ** voie (canal B) | ✅ 2026-08-25 |
 | 35 | **CUE** casque, **4ᵉ** voie (canal D) | ✅ 2026-08-25 |
+| 36 | **clic** de l'encodeur **BROWSE** | ✅ 2026-08-25 |
 | 40 | **offset bas**, deck droit | ✅ 2026-08-25 |
 | 41 | **offset haut**, deck droit | ✅ 2026-08-25 |
+| 42 | **clic** de l'encodeur de boucle **droit**, deck droit | ✅ 2026-08-25 |
+| 43 | **clic** de l'encodeur de boucle **gauche**, deck droit | ✅ 2026-08-25 |
 | 48 | bascule de deck **B / D**, droit | ✅ 2026-08-25 |
 | 49 | sample **1**, deck droit | ✅ 2026-08-25 |
 | 50 | **LOOP IN**, deck droit | ✅ 2026-08-25 |
@@ -215,23 +220,33 @@ C'est la mesure la plus propre du dossier : une seule variable, une seule répon
 | 67 | FX **gauche** — bouton du 3ᵉ potard | ✅ 2026-08-25 |
 | 68 | FX **gauche** — bouton du 4ᵉ potard | ✅ 2026-08-25 |
 | 69 | FX **gauche** — **MODE** | ✅ 2026-08-25 |
-| 72, 73 | assignation FX de la **1ʳᵉ** voie (canal C) | ⚠️ voie sûre, **ordre de la paire à confirmer** |
-| 74, 75 | assignation FX de la **2ᵉ** voie (canal A) | ⚠️ idem |
-| 76, 77 | assignation FX de la **3ᵉ** voie (canal B) | ⚠️ idem |
-| 78, 79 | assignation FX de la **4ᵉ** voie (canal D) | ⚠️ idem |
+| 70 | **clic** de l'encodeur **GAIN**, 1ʳᵉ voie (canal C) | ✅ 2026-08-25 |
+| 71 | **clic** de l'encodeur **GAIN**, 2ᵉ voie (canal A) | ✅ 2026-08-25 |
+| 72 | assignation FX **gauche** de la 1ʳᵉ voie (canal C) | ✅ 2026-08-25 |
+| 73 | assignation FX **droite** de la 1ʳᵉ voie (canal C) | ✅ 2026-08-25 |
+| 74 | assignation FX **gauche** de la 2ᵉ voie (canal A) | ✅ 2026-08-25 |
+| 75 | assignation FX **droite** de la 2ᵉ voie (canal A) | ✅ 2026-08-25 |
+| 76 | assignation FX **gauche** de la 3ᵉ voie (canal B) | ✅ 2026-08-25 |
+| 77 | assignation FX **droite** de la 3ᵉ voie (canal B) | ✅ 2026-08-25 |
+| 78 | assignation FX **gauche** de la 4ᵉ voie (canal D) | ✅ 2026-08-25 |
+| 79 | assignation FX **droite** de la 4ᵉ voie (canal D) | ✅ 2026-08-25 |
 | 89 | FX **droit** — bouton du 1ᵉʳ potard (le plus à gauche) | ✅ 2026-08-25 |
 | 90 | FX **droit** — bouton du 2ᵉ potard | ✅ 2026-08-25 |
 | 91 | FX **droit** — bouton du 3ᵉ potard | ✅ 2026-08-25 |
 | 92 | FX **droit** — bouton du 4ᵉ potard | ✅ 2026-08-25 |
 | 93 | FX **droit** — **MODE** | ✅ 2026-08-25 |
+| 94 | **clic** de l'encodeur **GAIN**, 3ᵉ voie (canal B) | ✅ 2026-08-25 |
+| 95 | **clic** de l'encodeur **GAIN**, 4ᵉ voie (canal D) | ✅ 2026-08-25 |
 | 20, 23, 86, 87 | interrupteurs, **fermés au repos** — position, pas appui | 🔎 à identifier |
 
-**66 boutons nommés sur 96**, dont 8 (les assignations FX) dont la **voie** est
-sûre mais dont l'ordre **à l'intérieur de la paire** attend une précision du PO :
-les deux boutons FX d'un même gain sont-ils côte à côte ou l'un au-dessus de
-l'autre, et lequel a été pressé en premier ? *La voie est acquise parce que les
-quatre paires se suivent dans l'ordre du balayage ; le rang dans la paire ne se
-déduit d'aucune mesure.*
+**75 boutons nommés sur 96.** Les 9 clics d'encodeurs y sont compris : **les 9
+encodeurs cliquent tous**. Les assignations FX sont **côte à côte sous leur
+encodeur de gain** (précision du PO, 2026-08-25), pressées de gauche à droite —
+d'où l'attribution gauche/droite de chaque paire.
+
+⚠️ *Le rang dans une paire ne se déduit d'aucune mesure* : il repose entièrement
+sur la convention de balayage annoncée avant le geste. Si le pont MIDI inverse un
+jour deux boutons voisins d'une même voie, c'est ici qu'il faut revenir.
 
 ⚠️ **Sur le deck droit, LOAD et la bascule de deck sont en miroir** de ceux du
 deck gauche : LOAD est à gauche de la bascule. L'attribution ne repose donc pas
@@ -395,19 +410,49 @@ SIZE/UNDO occupent les pairs **24, 26** et REC/PLAY les impairs **25, 27** — d
 rangées voisines qui se partagent un octet en alternance, comme les hot cues et
 le transport.
 
-### 🔢 Ce qui reste — et un décompte qui ne tombe pas juste
+### ✅ Les 9 clics d'encodeurs, 2026-08-25
 
-**66 boutons nommés + 4 interrupteurs fermés au repos = 70.** Le boîtier déclare
-**78** entrées numériques (`caiaq` en alloue 96). **Il en manque donc 8.**
+`releves/clics-encodeurs.log`. **Une pause de 5 s entre chaque encodeur**, et non
+entre rangées : un encodeur qui ne cliquerait pas aurait décalé toute la suite,
+alors qu'un segment vide se voit et ne contamine rien. **Les 9 cliquent.**
 
-Candidats évidents : les **clics d'encodeurs**. Le boîtier en porte 9 — 4 GAIN,
-1 BROWSE, et 2 par platine autour de LOOP IN/OUT. S'ils cliquent tous, on
-dépasserait 78 d'une unité ; s'il en manque un, on tomberait juste. ⚠️ **Ne pas
-bâtir sur ce compte** : le « 78 » vient de la déclaration du boîtier, que le
-dossier a déjà prise en défaut (les bits 86 et 87 existent au-delà des 78).
+⛔ **Prédiction réfutée : « les 4 clics de GAIN prendront 36-39 ».** Ils sont à
+**70, 71** (avec le panneau FX gauche, octet 12) et **94, 95** (avec le panneau
+FX droit, octet 15). C'est **BROWSE** qui occupe 36. 🔑 *Le boîtier groupe par
+région de carte, pas par fonction* — et mon « 4 places libres pour 4 encodeurs,
+ça tombe juste » était une coïncidence arithmétique déguisée en déduction.
 
-Bits encore libres : 18, 19, 21, 22 · 36 à 39 · 42 à 47 · 64, 70, 71 · 80 à 85 ·
-88, 94, 95.
+✅ Les deux prédictions structurelles, elles, tiennent : boucles gauches dans
+18-22, boucles droites dans 42-47.
+
+🔑 **Les deux decks se sont vérifiés l'un l'autre.** Les octets 6 (gauche) et 9
+(droit) ont la même structure interne — offset bas, offset haut, clic de boucle
+droit, clic de boucle gauche — et les positions se correspondent fonction par
+fonction : 19↔43 = encodeur **gauche**, 18↔42 = encodeur **droit**. Une
+interversion de l'ordre de balayage sur un seul deck aurait mis les deux octets
+en désaccord. *La symétrie sert de témoin : elle rend l'ordre annoncé vérifiable
+au lieu d'être cru sur parole.*
+
+⚠️ **Dans une paire d'encodeurs de boucle, le gauche porte le bit le plus haut**
+(19 > 18, 43 > 42) — l'inverse du corps de la platine. Une orientation de plus à
+ne pas transposer.
+
+### 🔢 Ce qui reste
+
+**75 boutons nommés + 4 interrupteurs fermés au repos = 79.** Le boîtier déclare
+**78** entrées numériques et `caiaq` en alloue 96 : on est déjà **au-dessus** du
+nombre déclaré. ⚠️ *Le « 78 » n'est pas une borne fiable* — le dossier l'avait
+déjà pris en défaut avec les bits 86 et 87. **Ne rien tronquer sur cette base.**
+
+**17 bits restent libres** : 21, 22 · 37, 38, 39 · 44 à 47 · 64 · 80 à 85 · 88.
+Aucun contrôle physique connu ne leur correspond, tous les boutons de la façade
+ayant été balayés.
+
+**Reste à identifier : les 4 interrupteurs fermés au repos** (20, 23, 86, 87).
+Piste à tester, cohérente avec « fermé au repos » : des **contacts de détection
+de jack** (casque, micro), qui se ferment quand *rien* n'est inséré. ⚠️ Mais 20
+et 23 vivent dans l'octet du **deck gauche**, ce qui plaide contre une origine
+mixeur — raison de plus pour mesurer au lieu de raisonner.
 
 ### 🔎 Structure du masque — constaté, non expliqué
 
