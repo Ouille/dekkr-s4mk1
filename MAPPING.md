@@ -237,7 +237,10 @@ C'est la mesure la plus propre du dossier : une seule variable, une seule répon
 | 93 | FX **droit** — **MODE** | ✅ 2026-08-25 |
 | 94 | **clic** de l'encodeur **GAIN**, 3ᵉ voie (canal B) | ✅ 2026-08-25 |
 | 95 | **clic** de l'encodeur **GAIN**, 4ᵉ voie (canal D) | ✅ 2026-08-25 |
-| 20, 23, 86, 87 | interrupteurs, **fermés au repos** — position, pas appui | 🔎 à identifier |
+| 85 | interrupteur du **panneau arrière**, *ouvert* au repos | ⚠️ lequel des trois, à confirmer |
+| 86 | interrupteur du **panneau arrière**, *fermé* au repos | ⚠️ idem |
+| 87 | interrupteur du **panneau arrière**, *fermé* au repos | ⚠️ idem |
+| 20, 23 | fermés au repos, **aucun contrôle physique connu** | 🔎 non identifiés |
 
 **75 boutons nommés sur 96.** Les 9 clics d'encodeurs y sont compris : **les 9
 encodeurs cliquent tous**. Les assignations FX sont **côte à côte sous leur
@@ -448,11 +451,45 @@ déjà pris en défaut avec les bits 86 et 87. **Ne rien tronquer sur cette base
 Aucun contrôle physique connu ne leur correspond, tous les boutons de la façade
 ayant été balayés.
 
-**Reste à identifier : les 4 interrupteurs fermés au repos** (20, 23, 86, 87).
-Piste à tester, cohérente avec « fermé au repos » : des **contacts de détection
-de jack** (casque, micro), qui se ferment quand *rien* n'est inséré. ⚠️ Mais 20
-et 23 vivent dans l'octet du **deck gauche**, ce qui plaide contre une origine
-mixeur — raison de plus pour mesurer au lieu de raisonner.
+### ✅ Le panneau arrière a son propre octet — 85, 86, 87
+
+`releves/interrupteurs.log`, 2026-08-25. Le boîtier porte **trois interrupteurs à
+l'arrière** : line/phono du deck C, line/phono du deck D, et bascule du MIDI en
+*thru*. Basculés puis remis, ils donnent **86, 87 puis 85** — tous dans l'**octet
+14**, celui dont ce fichier ne savait rien. **86 et 87 sont fermés au repos, 85
+est ouvert.**
+
+⚠️ **L'attribution des trois noms attend l'ordre de bascule du PO.**
+
+⛔ **Détection de jack : réfutée.** Casque et micro branchés puis débranchés
+n'ont produit **aucun bloc**. Concluant, parce que le même relevé prouve ensuite
+que le flux était vivant — les bascules d'interrupteurs, elles, sont bien
+arrivées.
+
+🔎 **Les bits 20 et 23 restent inexpliqués.** Fermés au repos, logés dans l'octet
+du deck **gauche**, sans équivalent dans l'octet symétrique du deck droit, et
+aucun contrôle de la façade ne leur correspond une fois tout balayé. ✅ **Non
+bloquant pour le pont MIDI : ils ne changent jamais, donc ils n'émettent jamais.**
+
+### 🔴 Les entrées numériques rebondissent — à anti-rebondir dans le pont
+
+Le bit **87** a produit **relâché / enfoncé / relâché dans le même instant** avant
+de se stabiliser. Les 75 boutons momentanés relevés dans la journée sont tous
+restés propres : c'est le contact d'interrupteur qui rebondit, pas le décodeur.
+
+⚠️ **Conséquence pour la tâche 5** : sans anti-rebond, une seule bascule arrière
+enverrait trois messages MIDI contradictoires.
+
+### ⚠️ « Main Level » — relevé NON concluant, à refaire avec témoin
+
+Le potard Main Level n'a d'équivalent dans **aucun des 36 axes**. Le relevé du
+2026-08-25 en mode brut a reçu **0 bloc en 10 secondes**, ce qui ne distingue pas
+« le contrôle n'est pas transmis » de « le lien n'a rien envoyé du tout ».
+
+🔴 *Même famille d'erreur que le 2026-08-24 : l'absence d'affichage n'est pas
+l'absence de signal.* Un relevé où l'on ne touche qu'un contrôle possiblement
+muet **doit** encadrer la mesure par un **témoin** — bouger le crossfader avant
+et après, pour prouver le lien vivant des deux côtés du geste.
 
 ### 🔎 Structure du masque — constaté, non expliqué
 
