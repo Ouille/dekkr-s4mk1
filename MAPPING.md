@@ -237,9 +237,9 @@ C'est la mesure la plus propre du dossier : une seule variable, une seule répon
 | 93 | FX **droit** — **MODE** | ✅ 2026-08-25 |
 | 94 | **clic** de l'encodeur **GAIN**, 3ᵉ voie (canal B) | ✅ 2026-08-25 |
 | 95 | **clic** de l'encodeur **GAIN**, 4ᵉ voie (canal D) | ✅ 2026-08-25 |
-| 85 | interrupteur du **panneau arrière**, *ouvert* au repos | ⚠️ lequel des trois, à confirmer |
-| 86 | interrupteur du **panneau arrière**, *fermé* au repos | ⚠️ idem |
-| 87 | interrupteur du **panneau arrière**, *fermé* au repos | ⚠️ idem |
+| 85 | arrière — bascule **MIDI thru**, *ouvert* au repos | ✅ 2026-08-25 |
+| 86 | arrière — **line / phono du deck C**, *fermé* au repos | ✅ 2026-08-25 |
+| 87 | arrière — **line / phono du deck D**, *fermé* au repos | ✅ 2026-08-25 |
 | 20, 23 | fermés au repos, **aucun contrôle physique connu** | 🔎 non identifiés |
 
 **75 boutons nommés sur 96.** Les 9 clics d'encodeurs y sont compris : **les 9
@@ -459,7 +459,12 @@ l'arrière** : line/phono du deck C, line/phono du deck D, et bascule du MIDI en
 14**, celui dont ce fichier ne savait rien. **86 et 87 sont fermés au repos, 85
 est ouvert.**
 
-⚠️ **L'attribution des trois noms attend l'ordre de bascule du PO.**
+✅ **Attribution close** (ordre de bascule donné par le PO) : **86 = line/phono du
+deck C**, **87 = line/phono du deck D**, **85 = MIDI thru**.
+
+🔑 Confirmation incidente de la loi des boutons : le deck C est **à gauche** du
+deck D sur la façade, et 86 < 87. **Croissant de gauche à droite**, comme partout
+ailleurs dans le masque des boutons.
 
 ⛔ **Détection de jack : réfutée.** Casque et micro branchés puis débranchés
 n'ont produit **aucun bloc**. Concluant, parce que le même relevé prouve ensuite
