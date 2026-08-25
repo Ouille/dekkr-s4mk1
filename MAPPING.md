@@ -180,6 +180,18 @@ C'est la mesure la plus propre du dossier : une seule variable, une seule répon
 | 15 | sample **4**, deck gauche | ✅ 2026-08-25 |
 | 16 | **offset bas**, deck gauche | ✅ 2026-08-25 |
 | 17 | **offset haut**, deck gauche | ✅ 2026-08-25 |
+| 24 | **SIZE** (Loop Recorder) | ✅ 2026-08-25 |
+| 25 | **REC** (Loop Recorder) | ✅ 2026-08-25 |
+| 26 | **UNDO** (Loop Recorder) | ✅ 2026-08-25 |
+| 27 | **PLAY** (Loop Recorder) | ✅ 2026-08-25 |
+| 28 | **BROWSE** | ✅ 2026-08-25 |
+| 29 | **SNAP** | ✅ 2026-08-25 |
+| 30 | **MASTER** | ✅ 2026-08-25 |
+| 31 | **QUANT** | ✅ 2026-08-25 |
+| 32 | **CUE** casque, **1ʳᵉ** voie depuis la gauche (canal C) | ✅ 2026-08-25 |
+| 33 | **CUE** casque, **2ᵉ** voie (canal A) | ✅ 2026-08-25 |
+| 34 | **CUE** casque, **3ᵉ** voie (canal B) | ✅ 2026-08-25 |
+| 35 | **CUE** casque, **4ᵉ** voie (canal D) | ✅ 2026-08-25 |
 | 40 | **offset bas**, deck droit | ✅ 2026-08-25 |
 | 41 | **offset haut**, deck droit | ✅ 2026-08-25 |
 | 48 | bascule de deck **B / D**, droit | ✅ 2026-08-25 |
@@ -203,6 +215,10 @@ C'est la mesure la plus propre du dossier : une seule variable, une seule répon
 | 67 | FX **gauche** — bouton du 3ᵉ potard | ✅ 2026-08-25 |
 | 68 | FX **gauche** — bouton du 4ᵉ potard | ✅ 2026-08-25 |
 | 69 | FX **gauche** — **MODE** | ✅ 2026-08-25 |
+| 72, 73 | assignation FX de la **1ʳᵉ** voie (canal C) | ⚠️ voie sûre, **ordre de la paire à confirmer** |
+| 74, 75 | assignation FX de la **2ᵉ** voie (canal A) | ⚠️ idem |
+| 76, 77 | assignation FX de la **3ᵉ** voie (canal B) | ⚠️ idem |
+| 78, 79 | assignation FX de la **4ᵉ** voie (canal D) | ⚠️ idem |
 | 89 | FX **droit** — bouton du 1ᵉʳ potard (le plus à gauche) | ✅ 2026-08-25 |
 | 90 | FX **droit** — bouton du 2ᵉ potard | ✅ 2026-08-25 |
 | 91 | FX **droit** — bouton du 3ᵉ potard | ✅ 2026-08-25 |
@@ -210,7 +226,12 @@ C'est la mesure la plus propre du dossier : une seule variable, une seule répon
 | 93 | FX **droit** — **MODE** | ✅ 2026-08-25 |
 | 20, 23, 86, 87 | interrupteurs, **fermés au repos** — position, pas appui | 🔎 à identifier |
 
-**46 boutons nommés sur 96.**
+**66 boutons nommés sur 96**, dont 8 (les assignations FX) dont la **voie** est
+sûre mais dont l'ordre **à l'intérieur de la paire** attend une précision du PO :
+les deux boutons FX d'un même gain sont-ils côte à côte ou l'un au-dessus de
+l'autre, et lequel a été pressé en premier ? *La voie est acquise parce que les
+quatre paires se suivent dans l'ordre du balayage ; le rang dans la paire ne se
+déduit d'aucune mesure.*
 
 ⚠️ **Sur le deck droit, LOAD et la bascule de deck sont en miroir** de ceux du
 deck gauche : LOAD est à gauche de la bascule. L'attribution ne repose donc pas
@@ -349,6 +370,44 @@ offsets. **C'est l'ordre des octets qui s'inverse, pas les bits.**
 **octets 7 et 8, soit les bits 24 à 39**. C'est là que les boutons du mixeur
 doivent tomber. Les bits 18, 19, 21, 22 (fin de l'octet 6) et 42-47 (fin de
 l'octet 9) restent également libres.
+
+### ✅ Les 20 boutons du mixeur, 2026-08-25
+
+`releves/boutons-mixeur.log`. Six rangées annoncées (8 / 3 / 2 / 2 / 1 / 4),
+**20 bits neufs, 20 attendus**, rien d'autre.
+
+🎯 **Prédiction confirmée** : les 8 boutons du centre (SNAP, MASTER, QUANT, SIZE,
+UNDO, REC, PLAY, BROWSE) tombent tous dans les bits **24-39** que le miroir
+laissait libres — précisément **24-31**.
+
+⛔ **Prédiction réfutée sur le débordement.** J'avais annoncé que les boutons
+*par voie* (8 FX + 4 CUE) iraient dans les places libres autour des decks (18,
+19, 21, 22 et 42-47). **Aucune n'a bougé** : les 4 CUE restent avec le centre
+(**32-35**) et ce sont les **8 assignations FX** qui partent à **72-79**.
+
+🔑 **L'octet 13 n'était pas vide, il attendait sa mesure.** Ce fichier écrivait
+le matin même que l'octet symétrique 13 « ne porte rien de connu ». Il porte les
+assignations FX. La zone FX est donc un bloc cohérent de quatre octets :
+**panneau gauche (12), assignations (13), 86/87 + libre (14), panneau droit (15)**.
+
+🔑 **Le damier n'est pas propre aux platines, c'est la grammaire du boîtier** :
+SIZE/UNDO occupent les pairs **24, 26** et REC/PLAY les impairs **25, 27** — deux
+rangées voisines qui se partagent un octet en alternance, comme les hot cues et
+le transport.
+
+### 🔢 Ce qui reste — et un décompte qui ne tombe pas juste
+
+**66 boutons nommés + 4 interrupteurs fermés au repos = 70.** Le boîtier déclare
+**78** entrées numériques (`caiaq` en alloue 96). **Il en manque donc 8.**
+
+Candidats évidents : les **clics d'encodeurs**. Le boîtier en porte 9 — 4 GAIN,
+1 BROWSE, et 2 par platine autour de LOOP IN/OUT. S'ils cliquent tous, on
+dépasserait 78 d'une unité ; s'il en manque un, on tomberait juste. ⚠️ **Ne pas
+bâtir sur ce compte** : le « 78 » vient de la déclaration du boîtier, que le
+dossier a déjà prise en défaut (les bits 86 et 87 existent au-delà des 78).
+
+Bits encore libres : 18, 19, 21, 22 · 36 à 39 · 42 à 47 · 64, 70, 71 · 80 à 85 ·
+88, 94, 95.
 
 ### 🔎 Structure du masque — constaté, non expliqué
 
