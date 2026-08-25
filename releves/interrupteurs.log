@@ -1,0 +1,43 @@
+sonde-s4mk1 — surveillance (17cc:baff)
+Ctrl-C pour arreter.
+
+✅ S4 arme.
+   (GET_DEVICE_INFO sans reponse — non bloquant)
+   Bouge un controle : seuls les blocs qui changent s'affichent.
+
+[   3.03s] … plus aucun bloc ne parvient (total 0)
+[   6.08s] … plus aucun bloc ne parvient (total 0)
+[   9.15s] … plus aucun bloc ne parvient (total 0)
+[  12.21s] … plus aucun bloc ne parvient (total 0)
+[  14.61s] bouton 20  enfonce
+[  14.61s] bouton 23  enfonce
+[  14.61s] bouton 86  enfonce
+[  14.61s] bouton 87  enfonce
+[  14.61s] jog G  position    2 / 1023  (horodatage 0x0003)
+[  14.61s] jog D  position    2 / 1023  (horodatage 0x091c)
+[  14.61s] encodeur 1  cran  4 / 15
+[  14.61s] encodeur 3  cran 15 / 15
+[  14.61s] encodeur 4  cran 15 / 15
+[  14.61s] encodeur 5  cran 15 / 15
+[  14.61s] encodeur 6  cran 14 / 15
+[  14.61s] encodeur 7  cran 15 / 15
+[  14.61s] encodeur 8  cran 15 / 15
+[  15.41s] … 2 blocs recus depuis 3 s, aucun changement (total 2)
+[  18.55s] … 2 blocs recus depuis 3 s, aucun changement (total 4)
+[  21.49s] bouton 86  relache
+[  21.75s] … 2 blocs recus depuis 3 s, aucun changement (total 6)
+[  22.75s] bouton 86  enfonce
+[  24.87s] … 2 blocs recus depuis 3 s, aucun changement (total 8)
+[  25.37s] bouton 87  relache
+[  25.37s] bouton 87  enfonce
+[  25.37s] bouton 87  relache
+[  26.63s] bouton 87  enfonce
+[  28.00s] … 8 blocs recus depuis 3 s, aucun changement (total 16)
+[  28.78s] bouton 85  enfonce
+[  30.28s] bouton 85  relache
+[  31.09s] … 4 blocs recus depuis 3 s, aucun changement (total 20)
+[  34.13s] … plus aucun bloc ne parvient (total 20)
+[  37.20s] … plus aucun bloc ne parvient (total 20)
+[  40.27s] … plus aucun bloc ne parvient (total 20)
+
+Arret. 20 blocs recus au total.
