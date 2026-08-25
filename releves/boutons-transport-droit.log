@@ -1,0 +1,36 @@
+sonde-s4mk1 — surveillance (17cc:baff)
+Ctrl-C pour arreter.
+
+✅ S4 arme.
+   (GET_DEVICE_INFO sans reponse — non bloquant)
+   Bouge un controle : seuls les blocs qui changent s'affichent.
+
+[   3.23s] … plus aucun bloc ne parvient (total 0)
+[   6.24s] … plus aucun bloc ne parvient (total 0)
+[   7.52s] bouton 20  enfonce
+[   7.52s] bouton 23  enfonce
+[   7.52s] bouton 57  enfonce
+[   7.52s] bouton 86  enfonce
+[   7.52s] bouton 87  enfonce
+[   7.52s] jog G  position    2 / 1023  (horodatage 0x0003)
+[   7.52s] jog D  position    1 / 1023  (horodatage 0x0007)
+[   7.52s] encodeur 1  cran 15 / 15
+[   7.52s] encodeur 3  cran 15 / 15
+[   7.52s] encodeur 4  cran 15 / 15
+[   7.52s] encodeur 5  cran 15 / 15
+[   7.52s] encodeur 6  cran 15 / 15
+[   7.52s] encodeur 7  cran 15 / 15
+[   7.52s] encodeur 8  cran 15 / 15
+[   7.87s] bouton 57  relache
+[   8.89s] bouton 59  enfonce
+[   9.25s] bouton 59  relache
+[   9.25s] … 8 blocs recus depuis 3 s, aucun changement (total 8)
+[  10.20s] bouton 61  enfonce
+[  10.53s] bouton 61  relache
+[  11.46s] bouton 63  enfonce
+[  11.80s] bouton 63  relache
+[  12.34s] … 8 blocs recus depuis 3 s, aucun changement (total 16)
+[  15.34s] … plus aucun bloc ne parvient (total 16)
+[  18.40s] … plus aucun bloc ne parvient (total 16)
+
+Arret. 16 blocs recus au total.
