@@ -162,11 +162,45 @@ C'est la mesure la plus propre du dossier : une seule variable, une seule répon
 
 | Bit | Contrôle physique | Statut |
 | :-- | :--- | :--- |
-| 7 | **PLAY, deck gauche** | ✅ 2026-08-23 |
+| 1 | **SHIFT**, deck gauche | ✅ 2026-08-25 |
+| 3 | **SYNC**, deck gauche | ✅ 2026-08-25 |
+| 5 | **CUE**, deck gauche | ✅ 2026-08-25 |
+| 7 | **PLAY**, deck gauche | ✅ 2026-08-23, reconfirmé le 2026-08-25 |
 | 20, 23, 86, 87 | interrupteurs, **fermés au repos** — position, pas appui | 🔎 à identifier |
 
-**1 bouton nommé sur 96.** `caiaq` ne nomme aucun bouton : cette colonne est
-entièrement à construire.
+**4 boutons nommés sur 96.** `caiaq` n'en nomme aucun : cette colonne est
+entièrement à construire, il n'y a rien à porter.
+
+### ✅ Rangée transport du deck gauche, 2026-08-25
+
+`releves/boutons-transport-gauche.log`. Quatre appuis annoncés **avant** le geste,
+de gauche à droite : SHIFT, SYNC, CUE, PLAY. Le journal donne quatre bits neufs
+dans cet ordre — **1, 3, 5, 7** — et **aucun autre bit ni axe n'a bougé**.
+
+🔑 **La rangée contenait le seul bouton déjà nommé, et il est tombé juste** :
+PLAY = bit 7, mesuré indépendamment le 2026-08-23. Une passe dont on connaît
+déjà une réponse vaut mieux qu'une passe entièrement inconnue — le témoin valide
+la méthode avant qu'on lui fasse confiance sur les 92 restants.
+
+⚠️ **Le bit 1 arrive dans le même paquet que le vidage initial** et aurait pu
+passer pour un cinquième interrupteur fermé au repos. Il est **relâché** 0,3 s
+plus tard, et `decode.rs` fige la liste des fermés au repos à exactement
+`[20, 23, 86, 87]` : c'est bien un appui, celui qui a réveillé le flux.
+
+### 🔎 Hypothèse non testée : entrelacement gauche / droite
+
+Les quatre bits sont **impairs et régulièrement espacés**. Lecture possible :
+les pairs {0, 2, 4, 6} portent la même rangée sur le deck **droit**.
+
+⛔ **Ne rien inscrire dans la table sur cette base.** Cette hypothèse
+**contredit** la règle des platines du 2026-08-24 — les paires gauche/droite
+*croissent* (jogs 10/11, faders de pitch 5/6), ce qui donnerait au deck gauche
+les numéros **bas**. L'une des deux doit céder, et aucun raisonnement ne dira
+laquelle. Lecture concurrente, tout aussi recevable : {0, 2, 4, 6} sont une
+**seconde rangée du deck gauche**.
+
+👉 Discriminant : relever la rangée transport du deck **droit**, quatre boutons
+dans le même ordre. C'est la prochaine passe.
 
 ---
 
@@ -219,6 +253,14 @@ regarder — en `--brut`.
 
 ## Observations à ne pas perdre
 
+**Le boîtier ne parle qu'en cas de changement, et bloc par bloc.** Relevé du
+2026-08-25 : rien pendant les 9 premières secondes (« plus aucun bloc ne
+parvient »), puis **16 blocs en tout** pour 4 appuis — soit les 8 fronts du
+bloc 0 plus quelques blocs de jog. **Aucun bloc d'axe n'est arrivé de toute la
+séance.** Conséquence pour le pont MIDI : l'état initial d'un contrôle n'est
+connu qu'après son premier mouvement, et un pont qui attend un état complet au
+démarrage attendrait indéfiniment.
+
 **Les bits 86 et 87 existent alors que le boîtier déclare 78 entrées numériques.**
 Ils sont à 1 au repos. Le décodeur garde donc les 96 bits alloués par `caiaq` :
 tronquer à 78 supprimerait des contrôles réels.
@@ -245,8 +287,11 @@ proximité des jogs, capacitifs, donc les plus bruyants. Aucun axe au repos n'es
 en dessous de 14.
 
 🔑 **Le bruit se concentre dans le vidage initial, pas dans la durée.** Au premier
-geste, le boîtier redonne l'état des 36 axes **trois fois en 60 ms**, et les trois
-copies diffèrent du bruit. Ensuite, pendant les balayages, **aucun autre axe n'a
+geste **analogique**, le boîtier redonne l'état des 36 axes **trois fois en 60 ms**,
+et les trois copies diffèrent du bruit. *(Nuance apportée le 2026-08-25 : j'avais
+écrit « au premier geste ». Le relevé des boutons montre 4 appuis sur 4 secondes
+sans qu'un seul bloc d'axe n'arrive — la rafale est déclenchée par le bloc
+concerné, pas par le réveil du flux.)* Ensuite, pendant les balayages, **aucun autre axe n'a
 émis** : le boîtier applique son propre seuil quand il est déjà en émission. Le
 problème est donc **borné** — une rafale au démarrage, plus quelques émissions
 isolées, et non un bruit de fond continu.
