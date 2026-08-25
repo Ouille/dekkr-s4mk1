@@ -1,0 +1,111 @@
+sonde-s4mk1 — surveillance (17cc:baff)
+Ctrl-C pour arreter.
+
+✅ S4 arme.
+   (GET_DEVICE_INFO sans reponse — non bloquant)
+   Bouge un controle : seuls les blocs qui changent s'affichent.
+
+[   2.80s] bouton 20  enfonce
+[   2.80s] bouton 23  enfonce
+[   2.80s] bouton 86  enfonce
+[   2.80s] bouton 87  enfonce
+[   2.80s] jog G  position    2 / 1023  (horodatage 0x0003)
+[   2.80s] jog D  position    1 / 1023  (horodatage 0x0007)
+[   2.80s] encodeur 1  cran  4 / 15
+[   2.80s] encodeur 3  cran 15 / 15
+[   2.80s] encodeur 4  cran 15 / 15
+[   2.80s] encodeur 5  cran 15 / 15
+[   2.80s] encodeur 6  cran 15 / 15
+[   2.80s] encodeur 7  cran 15 / 15
+[   2.80s] encodeur 8  cran 15 / 15
+[   2.80s] axe  4 volume de boucle 2059 / 4095
+[   2.80s] axe  7 crossfader       2039 / 4095
+[   2.80s] axe  6 tempo droit      2060 / 4095
+[   2.80s] axe  5 tempo gauche     2061 / 4095
+[   2.80s] axe 10 proximite jog G  3045 / 4095
+[   2.80s] axe 11 proximite jog D  3090 / 4095
+[   2.80s] axe 12 EQ D filtre      2090 / 4095
+[   2.80s] axe 13 EQ D bas         2090 / 4095
+[   2.80s] axe 14 EQ D medium      2084 / 4095
+[   2.80s] axe 15 EQ D haut        2045 / 4095
+[   2.80s] axe 16 FX D 3           2091 / 4095
+[   2.80s] axe 17 FX D 2           2059 / 4095
+[   2.80s] axe 18 FX D 1           2053 / 4095
+[   2.80s] axe 19 FX D dry/wet     2101 / 4095
+[   2.80s] axe 20 EQ B filtre      2053 / 4095
+[   2.80s] axe 21 EQ B bas         2085 / 4095
+[   2.80s] axe 22 EQ B medium      2130 / 4095
+[   2.80s] axe 23 EQ B haut        2077 / 4095
+[   2.80s] axe 24 EQ A filtre      2058 / 4095
+[   2.80s] axe 25 EQ A bas         2052 / 4095
+[   2.80s] axe 26 EQ A medium      2108 / 4095
+[   2.80s] axe 27 EQ A haut        2078 / 4095
+[   2.80s] axe 28 EQ C filtre      2074 / 4095
+[   2.80s] axe 29 EQ C bas         2079 / 4095
+[   2.80s] axe 30 EQ C medium      2101 / 4095
+[   2.80s] axe 31 EQ C haut        2083 / 4095
+[   2.80s] axe 32 FX G 3           2012 / 4095
+[   2.80s] axe 33 FX G 2           2067 / 4095
+[   2.80s] axe 34 FX G 1           2099 / 4095
+[   2.80s] axe 35 FX G dry/wet     2068 / 4095
+[   3.06s] … 8 blocs recus depuis 3 s, aucun changement (total 8)
+[   6.05s] bouton 65  enfonce
+[   6.20s] bouton 65  relache
+[   6.20s] … 4 blocs recus depuis 3 s, aucun changement (total 12)
+[   7.46s] bouton 66  enfonce
+[   7.68s] bouton 66  relache
+[   8.71s] bouton 67  enfonce
+[   8.90s] bouton 67  relache
+[   9.44s] … 8 blocs recus depuis 3 s, aucun changement (total 20)
+[   9.96s] bouton 68  enfonce
+[  10.17s] bouton 68  relache
+[  11.23s] bouton 69  enfonce
+[  11.43s] bouton 69  relache
+[  12.53s] … 8 blocs recus depuis 3 s, aucun changement (total 28)
+[  15.78s] … plus aucun bloc ne parvient (total 28)
+[  18.47s] bouton  8  enfonce
+[  18.62s] bouton  8  relache
+[  18.90s] … 4 blocs recus depuis 3 s, aucun changement (total 32)
+[  20.07s] bouton 14  enfonce
+[  20.31s] bouton 14  relache
+[  21.94s] … 4 blocs recus depuis 3 s, aucun changement (total 36)
+[  25.20s] … plus aucun bloc ne parvient (total 36)
+[  27.60s] bouton 17  enfonce
+[  27.84s] bouton 17  relache
+[  28.37s] … 4 blocs recus depuis 3 s, aucun changement (total 40)
+[  29.07s] bouton 16  enfonce
+[  29.29s] bouton 16  relache
+[  31.48s] … 4 blocs recus depuis 3 s, aucun changement (total 44)
+[  34.54s] … plus aucun bloc ne parvient (total 44)
+[  36.67s] bouton 10  enfonce
+[  36.93s] bouton 10  relache
+[  37.75s] … 4 blocs recus depuis 3 s, aucun changement (total 48)
+[  37.85s] bouton 12  enfonce
+[  38.07s] bouton 12  relache
+[  40.77s] … 4 blocs recus depuis 3 s, aucun changement (total 52)
+[  43.83s] … plus aucun bloc ne parvient (total 52)
+[  46.25s] bouton  9  enfonce
+[  46.50s] bouton  9  relache
+[  47.04s] … 4 blocs recus depuis 3 s, aucun changement (total 56)
+[  47.51s] bouton 11  enfonce
+[  47.78s] bouton 11  relache
+[  48.79s] bouton 13  enfonce
+[  49.07s] bouton 13  relache
+[  49.99s] bouton 15  enfonce
+[  50.24s] bouton 15  relache
+[  50.24s] … 12 blocs recus depuis 3 s, aucun changement (total 68)
+[  53.31s] … plus aucun bloc ne parvient (total 68)
+[  56.37s] … plus aucun bloc ne parvient (total 68)
+[  58.06s] bouton  0  enfonce
+[  58.28s] bouton  0  relache
+[  59.26s] bouton  2  enfonce
+[  59.48s] bouton  2  relache
+[  59.48s] … 8 blocs recus depuis 3 s, aucun changement (total 76)
+[  60.45s] bouton  4  enfonce
+[  60.66s] bouton  4  relache
+[  61.70s] bouton  6  enfonce
+[  61.91s] bouton  6  relache
+[  62.70s] … 8 blocs recus depuis 3 s, aucun changement (total 84)
+[  65.75s] … plus aucun bloc ne parvient (total 84)
+
+Arret. 84 blocs recus au total.
