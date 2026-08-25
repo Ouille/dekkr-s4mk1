@@ -1,0 +1,80 @@
+sonde-s4mk1 — surveillance (17cc:baff)
+Ctrl-C pour arreter.
+
+✅ S4 arme.
+   (GET_DEVICE_INFO sans reponse — non bloquant)
+   Bouge un controle : seuls les blocs qui changent s'affichent.
+
+[   3.06s] … plus aucun bloc ne parvient (total 0)
+[   5.86s] bouton 20  enfonce
+[   5.86s] bouton 23  enfonce
+[   5.86s] bouton 86  enfonce
+[   5.86s] bouton 87  enfonce
+[   5.86s] bouton 89  enfonce
+[   5.86s] jog G  position    2 / 1023  (horodatage 0x0003)
+[   5.86s] jog D  position    1 / 1023  (horodatage 0x0007)
+[   5.86s] encodeur 1  cran  4 / 15
+[   5.86s] encodeur 3  cran 15 / 15
+[   5.86s] encodeur 4  cran 15 / 15
+[   5.86s] encodeur 5  cran 15 / 15
+[   5.86s] encodeur 6  cran 14 / 15
+[   5.86s] encodeur 7  cran 15 / 15
+[   5.86s] encodeur 8  cran 15 / 15
+[   6.13s] bouton 89  relache
+[   6.13s] … 4 blocs recus depuis 3 s, aucun changement (total 4)
+[   7.12s] bouton 90  enfonce
+[   7.36s] bouton 90  relache
+[   8.33s] bouton 91  enfonce
+[   8.59s] bouton 91  relache
+[   9.13s] … 8 blocs recus depuis 3 s, aucun changement (total 12)
+[   9.50s] bouton 92  enfonce
+[   9.78s] bouton 92  relache
+[  10.70s] bouton 93  enfonce
+[  11.07s] bouton 93  relache
+[  12.15s] … 8 blocs recus depuis 3 s, aucun changement (total 20)
+[  15.22s] … plus aucun bloc ne parvient (total 20)
+[  17.81s] bouton 54  enfonce
+[  18.05s] bouton 54  relache
+[  18.32s] … 4 blocs recus depuis 3 s, aucun changement (total 24)
+[  19.42s] bouton 48  enfonce
+[  19.67s] bouton 48  relache
+[  21.35s] … 4 blocs recus depuis 3 s, aucun changement (total 28)
+[  24.42s] … plus aucun bloc ne parvient (total 28)
+[  26.10s] bouton 41  enfonce
+[  26.33s] bouton 41  relache
+[  27.28s] bouton 40  enfonce
+[  27.51s] bouton 40  relache
+[  27.51s] … 8 blocs recus depuis 3 s, aucun changement (total 36)
+[  30.55s] … plus aucun bloc ne parvient (total 36)
+[  33.61s] … plus aucun bloc ne parvient (total 36)
+[  34.49s] bouton 50  enfonce
+[  34.81s] bouton 50  relache
+[  35.91s] bouton 52  enfonce
+[  36.18s] bouton 52  relache
+[  36.72s] … 8 blocs recus depuis 3 s, aucun changement (total 44)
+[  39.74s] … plus aucun bloc ne parvient (total 44)
+[  42.81s] … plus aucun bloc ne parvient (total 44)
+[  43.10s] bouton 49  enfonce
+[  43.37s] bouton 49  relache
+[  44.23s] bouton 51  enfonce
+[  44.53s] bouton 51  relache
+[  45.34s] bouton 53  enfonce
+[  45.60s] bouton 53  relache
+[  45.88s] … 12 blocs recus depuis 3 s, aucun changement (total 56)
+[  46.46s] bouton 55  enfonce
+[  46.70s] bouton 55  relache
+[  49.12s] … 4 blocs recus depuis 3 s, aucun changement (total 60)
+[  52.13s] bouton 56  enfonce
+[  52.13s] … 2 blocs recus depuis 3 s, aucun changement (total 62)
+[  52.35s] bouton 56  relache
+[  53.28s] bouton 58  enfonce
+[  53.51s] bouton 58  relache
+[  54.37s] bouton 60  enfonce
+[  54.59s] bouton 60  relache
+[  55.15s] … 10 blocs recus depuis 3 s, aucun changement (total 72)
+[  55.39s] bouton 62  enfonce
+[  55.61s] bouton 62  relache
+[  58.32s] … 4 blocs recus depuis 3 s, aucun changement (total 76)
+[  61.38s] … plus aucun bloc ne parvient (total 76)
+
+Arret. 76 blocs recus au total.
