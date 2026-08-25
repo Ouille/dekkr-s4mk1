@@ -485,16 +485,30 @@ restés propres : c'est le contact d'interrupteur qui rebondit, pas le décodeur
 ⚠️ **Conséquence pour la tâche 5** : sans anti-rebond, une seule bascule arrière
 enverrait trois messages MIDI contradictoires.
 
-### ⚠️ « Main Level » — relevé NON concluant, à refaire avec témoin
+### ✅ « Main Level » n'est pas transmis — analogique pur
 
-Le potard Main Level n'a d'équivalent dans **aucun des 36 axes**. Le relevé du
-2026-08-25 en mode brut a reçu **0 bloc en 10 secondes**, ce qui ne distingue pas
-« le contrôle n'est pas transmis » de « le lien n'a rien envoyé du tout ».
+Le potard Main Level n'a d'équivalent dans **aucun des 36 axes**.
+`releves/brut-main-level.log`, mode brut, encadré par un **témoin** :
 
-🔴 *Même famille d'erreur que le 2026-08-24 : l'absence d'affichage n'est pas
-l'absence de signal.* Un relevé où l'on ne touche qu'un contrôle possiblement
-muet **doit** encadrer la mesure par un **témoin** — bouger le crossfader avant
-et après, pour prouver le lien vivant des deux côtés du geste.
+| Fenêtre | Trafic |
+| :--- | :--- |
+| 2,67 → 5,83 s — crossfader balayé | **2 358 blocs** |
+| 5,83 → 15,39 s — **Main Level tourné à fond** | **« plus aucun bloc ne parvient »**, deux battements de suite |
+| 15,39 → 15,66 s — crossfader rebalayé | **132 blocs** |
+
+Sur toute la séance, **un seul offset a bougé** : bloc 2 o7 (crossfader), de 11 à
+4093. Aucun autre octet n'a changé d'une unité. Le contrôle est donc **purement
+analogique**, appliqué dans le chemin audio matériel.
+
+🔴 **Le premier relevé, sans témoin, ne prouvait rien** : 0 bloc reçu ne distingue
+pas « le contrôle n'est pas transmis » de « le lien n'a rien envoyé du tout ».
+*Une conclusion tirée d'une ABSENCE exige une preuve de vie des deux côtés du
+geste, dans la même exécution.* C'est la version mesurable de la règle du
+2026-08-24 : « le décodeur n'affiche rien » ≠ « le boîtier n'envoie rien ».
+
+⚠️ **Conséquence pour SPEC-S4-004 (audio)** : aucun CC ne sortira jamais de ce
+potard, et le volume master du S4 restera un réglage physique que l'application
+ne peut ni lire ni compenser.
 
 ### 🔎 Structure du masque — constaté, non expliqué
 
