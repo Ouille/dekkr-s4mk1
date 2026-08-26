@@ -1,0 +1,602 @@
+sonde-s4mk1 — surveillance (17cc:baff)
+🎹 Port MIDI virtuel « DekkR S4 MK1 » ouvert.
+Ctrl-C pour arreter.
+
+✅ S4 arme.
+   (GET_DEVICE_INFO sans reponse — non bloquant)
+   Bouge un controle : seuls les blocs qui changent s'affichent.
+
+[   3.20s] … plus aucun bloc ne parvient (total 0)
+[   6.26s] … plus aucun bloc ne parvient (total 0)
+[   9.33s] … plus aucun bloc ne parvient (total 0)
+[  12.39s] … plus aucun bloc ne parvient (total 0)
+[  15.47s] … plus aucun bloc ne parvient (total 0)
+[  18.56s] … plus aucun bloc ne parvient (total 0)
+[  21.79s] … plus aucun bloc ne parvient (total 0)
+[  24.95s] … plus aucun bloc ne parvient (total 0)
+[  28.06s] … plus aucun bloc ne parvient (total 0)
+[  31.08s] … plus aucun bloc ne parvient (total 0)
+[  34.32s] … plus aucun bloc ne parvient (total 0)
+[  37.47s] … plus aucun bloc ne parvient (total 0)
+[  40.62s] … plus aucun bloc ne parvient (total 0)
+[  43.88s] … plus aucun bloc ne parvient (total 0)
+[  47.13s] … plus aucun bloc ne parvient (total 0)
+[  50.38s] … plus aucun bloc ne parvient (total 0)
+[  53.46s] … plus aucun bloc ne parvient (total 0)
+[  56.71s] … plus aucun bloc ne parvient (total 0)
+[  59.79s] … plus aucun bloc ne parvient (total 0)
+[  63.04s] … plus aucun bloc ne parvient (total 0)
+[  66.28s] … plus aucun bloc ne parvient (total 0)
+[  69.46s] … plus aucun bloc ne parvient (total 0)
+[  72.66s] … plus aucun bloc ne parvient (total 0)
+[  75.86s] … plus aucun bloc ne parvient (total 0)
+[  79.00s] … plus aucun bloc ne parvient (total 0)
+[  82.06s] … plus aucun bloc ne parvient (total 0)
+[  85.15s] … plus aucun bloc ne parvient (total 0)
+[  88.18s] … plus aucun bloc ne parvient (total 0)
+[  91.22s] … plus aucun bloc ne parvient (total 0)
+[  94.38s] … plus aucun bloc ne parvient (total 0)
+[  97.41s] … plus aucun bloc ne parvient (total 0)
+[ 100.47s] … plus aucun bloc ne parvient (total 0)
+[ 103.70s] … plus aucun bloc ne parvient (total 0)
+[ 106.76s] … plus aucun bloc ne parvient (total 0)
+[ 109.87s] … plus aucun bloc ne parvient (total 0)
+[ 112.89s] … plus aucun bloc ne parvient (total 0)
+[ 116.14s] … plus aucun bloc ne parvient (total 0)
+[ 119.20s] … plus aucun bloc ne parvient (total 0)
+[ 122.27s] … plus aucun bloc ne parvient (total 0)
+[ 125.34s] … plus aucun bloc ne parvient (total 0)
+[ 128.58s] … plus aucun bloc ne parvient (total 0)
+[ 131.65s] … plus aucun bloc ne parvient (total 0)
+[ 134.71s] … plus aucun bloc ne parvient (total 0)
+[ 137.78s] … plus aucun bloc ne parvient (total 0)
+[ 140.85s] … plus aucun bloc ne parvient (total 0)
+[ 143.88s] … plus aucun bloc ne parvient (total 0)
+[ 147.12s] … plus aucun bloc ne parvient (total 0)
+[ 150.35s] … plus aucun bloc ne parvient (total 0)
+[ 153.14s] bouton  7  enfonce
+[ 153.14s] bouton 20  enfonce
+[ 153.14s] bouton 23  enfonce
+[ 153.14s] bouton 86  enfonce
+[ 153.14s] bouton 87  enfonce
+[ 153.14s] jog G  position    2 / 1023  (horodatage 0x0003)
+[ 153.14s] jog D  position    2 / 1023  (horodatage 0x091c)
+[ 153.14s] encodeur 1  cran  4 / 15
+[ 153.14s] encodeur 3  cran 15 / 15
+[ 153.14s] encodeur 4  cran 15 / 15
+[ 153.14s] encodeur 5  cran 15 / 15
+[ 153.14s] encodeur 6  cran 14 / 15
+[ 153.14s] encodeur 7  cran 15 / 15
+[ 153.14s] encodeur 8  cran 15 / 15
+[ 153.35s] bouton  7  relache
+[ 153.62s] … 4 blocs recus depuis 3 s, aucun changement (total 4)
+[ 156.63s] … plus aucun bloc ne parvient (total 4)
+[ 159.70s] … plus aucun bloc ne parvient (total 4)
+[ 161.33s] bouton 63  enfonce
+[ 161.47s] bouton 63  relache
+[ 162.86s] … 4 blocs recus depuis 3 s, aucun changement (total 8)
+[ 165.92s] … plus aucun bloc ne parvient (total 8)
+[ 169.17s] … plus aucun bloc ne parvient (total 8)
+[ 172.24s] … plus aucun bloc ne parvient (total 8)
+[ 175.30s] … plus aucun bloc ne parvient (total 8)
+[ 178.37s] … plus aucun bloc ne parvient (total 8)
+[ 179.12s] axe  4 volume de boucle 2059 / 4095
+[ 179.12s] axe  7 crossfader       2187 / 4095
+[ 179.12s] axe  6 tempo droit      2060 / 4095
+[ 179.12s] axe  5 tempo gauche     2061 / 4095
+[ 179.12s] axe  9 cue mix           790 / 4095
+[ 179.12s] axe 10 proximite jog G  3050 / 4095
+[ 179.12s] axe 11 proximite jog D  3090 / 4095
+[ 179.12s] axe 12 EQ D filtre      2081 / 4095
+[ 179.12s] axe 13 EQ D bas         2090 / 4095
+[ 179.12s] axe 14 EQ D medium      2084 / 4095
+[ 179.12s] axe 15 EQ D haut        2045 / 4095
+[ 179.12s] axe 16 FX D 3           2089 / 4095
+[ 179.12s] axe 17 FX D 2           2059 / 4095
+[ 179.12s] axe 18 FX D 1           2048 / 4095
+[ 179.12s] axe 19 FX D dry/wet     2100 / 4095
+[ 179.12s] axe 20 EQ B filtre      2053 / 4095
+[ 179.12s] axe 21 EQ B bas         2085 / 4095
+[ 179.12s] axe 22 EQ B medium      2130 / 4095
+[ 179.13s] axe 23 EQ B haut        2077 / 4095
+[ 179.13s] axe 24 EQ A filtre      2058 / 4095
+[ 179.13s] axe 25 EQ A bas         2052 / 4095
+[ 179.13s] axe 26 EQ A medium      2108 / 4095
+[ 179.13s] axe 27 EQ A haut        2078 / 4095
+[ 179.13s] axe 28 EQ C filtre      2074 / 4095
+[ 179.13s] axe 29 EQ C bas         2078 / 4095
+[ 179.13s] axe 30 EQ C medium      2100 / 4095
+[ 179.13s] axe 31 EQ C haut        2082 / 4095
+[ 179.13s] axe 32 FX G 3           2014 / 4095
+[ 179.13s] axe 33 FX G 2           2067 / 4095
+[ 179.13s] axe 34 FX G 1           2100 / 4095
+[ 179.13s] axe 35 FX G dry/wet     2068 / 4095
+[ 179.13s] axe  9 cue mix           774 / 4095
+[ 179.14s] axe  9 cue mix           752 / 4095
+[ 179.15s] axe  9 cue mix           738 / 4095
+[ 179.15s] axe  9 cue mix           725 / 4095
+[ 179.16s] axe  9 cue mix           713 / 4095
+[ 179.17s] axe  9 cue mix           699 / 4095
+[ 179.17s] axe  9 cue mix           688 / 4095
+[ 179.18s] axe  9 cue mix           674 / 4095
+[ 179.18s] axe  9 cue mix           662 / 4095
+[ 179.19s] axe  9 cue mix           650 / 4095
+[ 179.20s] axe  9 cue mix           638 / 4095
+[ 179.28s] axe  9 cue mix           626 / 4095
+[ 179.28s] axe  9 cue mix           615 / 4095
+[ 179.28s] axe  4 volume de boucle 2046 / 4095
+[ 179.28s] axe  7 crossfader       2175 / 4095
+[ 179.28s] axe  9 cue mix           542 / 4095
+[ 179.28s] axe 10 proximite jog G  3031 / 4095
+[ 179.28s] axe 11 proximite jog D  3072 / 4095
+[ 179.28s] axe 28 EQ C filtre      2061 / 4095
+[ 179.28s] axe 29 EQ C bas         2066 / 4095
+[ 179.28s] axe 30 EQ C medium      2088 / 4095
+[ 179.28s] axe 31 EQ C haut        2069 / 4095
+[ 179.28s] axe 32 FX G 3           2001 / 4095
+[ 179.28s] axe 33 FX G 2           2054 / 4095
+[ 179.28s] axe 34 FX G 1           2086 / 4095
+[ 179.28s] axe 35 FX G dry/wet     2055 / 4095
+[ 179.30s] axe  9 cue mix           531 / 4095
+[ 179.31s] axe  9 cue mix           519 / 4095
+[ 179.32s] axe 31 EQ C haut        2080 / 4095
+[ 179.32s] axe 34 FX G 1           2097 / 4095
+[ 179.32s] axe 35 FX G dry/wet     2066 / 4095
+[ 179.32s] axe 28 EQ C filtre      2072 / 4095
+[ 179.32s] axe 33 FX G 2           2065 / 4095
+[ 179.32s] axe  9 cue mix           506 / 4095
+[ 179.32s] axe 30 EQ C medium      2099 / 4095
+[ 179.32s] axe 29 EQ C bas         2077 / 4095
+[ 179.32s] axe 32 FX G 3           2012 / 4095
+[ 179.33s] axe  9 cue mix           494 / 4095
+[ 179.33s] axe  9 cue mix           480 / 4095
+[ 179.34s] axe  9 cue mix           466 / 4095
+[ 179.34s] axe 11 proximite jog D  3083 / 4095
+[ 179.35s] axe  9 cue mix           451 / 4095
+[ 179.35s] axe 10 proximite jog G  3042 / 4095
+[ 179.35s] axe  9 cue mix           440 / 4095
+[ 179.35s] axe  9 cue mix           429 / 4095
+[ 179.36s] axe  4 volume de boucle 2057 / 4095
+[ 179.36s] axe  9 cue mix           416 / 4095
+[ 179.37s] axe  9 cue mix           401 / 4095
+[ 179.37s] axe  7 crossfader       2186 / 4095
+[ 179.37s] axe  9 cue mix           387 / 4095
+[ 179.38s] axe  9 cue mix           372 / 4095
+[ 179.39s] axe  9 cue mix           360 / 4095
+[ 179.39s] axe  9 cue mix           345 / 4095
+[ 179.40s] axe  9 cue mix           332 / 4095
+[ 179.41s] axe  9 cue mix           320 / 4095
+[ 179.41s] axe  9 cue mix           294 / 4095
+[ 179.41s] axe  9 cue mix           281 / 4095
+[ 179.42s] axe  9 cue mix           268 / 4095
+[ 179.42s] axe  9 cue mix           252 / 4095
+[ 179.43s] axe  9 cue mix           241 / 4095
+[ 179.43s] axe  9 cue mix           229 / 4095
+[ 179.44s] axe  9 cue mix           217 / 4095
+[ 179.44s] axe  9 cue mix           202 / 4095
+[ 179.45s] axe  9 cue mix           190 / 4095
+[ 179.45s] axe  9 cue mix           174 / 4095
+[ 179.46s] axe  9 cue mix           156 / 4095
+[ 179.46s] axe  9 cue mix           140 / 4095
+[ 179.47s] axe  9 cue mix           123 / 4095
+[ 179.47s] axe  9 cue mix           108 / 4095
+[ 179.47s] axe  9 cue mix            97 / 4095
+[ 179.47s] axe  9 cue mix            86 / 4095
+[ 179.48s] axe  9 cue mix            71 / 4095
+[ 179.48s] axe  9 cue mix            55 / 4095
+[ 179.49s] axe  9 cue mix            38 / 4095
+[ 179.49s] axe  9 cue mix            20 / 4095
+[ 179.50s] axe  9 cue mix             9 / 4095
+[ 180.15s] axe  9 cue mix            28 / 4095
+[ 180.15s] axe  9 cue mix            39 / 4095
+[ 180.15s] axe  9 cue mix            53 / 4095
+[ 180.15s] axe  9 cue mix            65 / 4095
+[ 180.15s] axe  9 cue mix            77 / 4095
+[ 180.16s] axe  9 cue mix            95 / 4095
+[ 180.16s] axe  9 cue mix           110 / 4095
+[ 180.16s] axe  9 cue mix           126 / 4095
+[ 180.16s] axe  9 cue mix           143 / 4095
+[ 180.17s] axe  9 cue mix           159 / 4095
+[ 180.17s] axe  9 cue mix           174 / 4095
+[ 180.17s] axe  9 cue mix           185 / 4095
+[ 180.18s] axe  9 cue mix           212 / 4095
+[ 180.18s] axe  9 cue mix           232 / 4095
+[ 180.18s] axe  9 cue mix           243 / 4095
+[ 180.19s] axe  9 cue mix           264 / 4095
+[ 180.19s] axe  9 cue mix           275 / 4095
+[ 180.19s] axe  9 cue mix           286 / 4095
+[ 180.20s] axe  9 cue mix           305 / 4095
+[ 180.20s] axe  9 cue mix           316 / 4095
+[ 180.20s] axe  9 cue mix           339 / 4095
+[ 180.20s] axe  9 cue mix           352 / 4095
+[ 180.21s] axe  9 cue mix           364 / 4095
+[ 180.21s] axe  9 cue mix           375 / 4095
+[ 180.21s] axe  9 cue mix           395 / 4095
+[ 180.22s] axe  9 cue mix           414 / 4095
+[ 180.22s] axe  9 cue mix           432 / 4095
+[ 180.23s] axe  9 cue mix           451 / 4095
+[ 180.24s] axe  9 cue mix           469 / 4095
+[ 180.24s] axe  9 cue mix           490 / 4095
+[ 180.24s] axe  9 cue mix           501 / 4095
+[ 180.24s] axe  9 cue mix           512 / 4095
+[ 180.24s] axe  9 cue mix           530 / 4095
+[ 180.25s] axe  9 cue mix           549 / 4095
+[ 180.25s] axe  9 cue mix           568 / 4095
+[ 180.26s] axe  9 cue mix           589 / 4095
+[ 180.26s] axe  9 cue mix           602 / 4095
+[ 180.26s] axe  9 cue mix           613 / 4095
+[ 180.27s] axe  9 cue mix           625 / 4095
+[ 180.27s] axe  9 cue mix           638 / 4095
+[ 180.27s] axe  9 cue mix           649 / 4095
+[ 180.27s] axe  9 cue mix           660 / 4095
+[ 180.27s] axe  9 cue mix           677 / 4095
+[ 180.28s] axe  9 cue mix           689 / 4095
+[ 180.29s] axe  9 cue mix           704 / 4095
+[ 180.29s] axe  9 cue mix           716 / 4095
+[ 180.30s] axe  9 cue mix           729 / 4095
+[ 180.30s] axe  9 cue mix           746 / 4095
+[ 180.30s] axe  9 cue mix           761 / 4095
+[ 180.31s] axe  9 cue mix           779 / 4095
+[ 180.31s] axe  9 cue mix           799 / 4095
+[ 180.32s] axe  9 cue mix           820 / 4095
+[ 180.32s] axe  9 cue mix           840 / 4095
+[ 180.32s] axe  9 cue mix           855 / 4095
+[ 180.33s] axe  9 cue mix           872 / 4095
+[ 180.33s] axe  9 cue mix           891 / 4095
+[ 180.34s] axe  9 cue mix           910 / 4095
+[ 180.34s] axe  9 cue mix           921 / 4095
+[ 180.34s] axe  9 cue mix           932 / 4095
+[ 180.34s] axe  9 cue mix           943 / 4095
+[ 180.35s] axe  9 cue mix           954 / 4095
+[ 180.35s] axe  9 cue mix           974 / 4095
+[ 180.35s] axe  9 cue mix           985 / 4095
+[ 180.36s] axe  9 cue mix           997 / 4095
+[ 180.36s] axe  9 cue mix          1009 / 4095
+[ 180.36s] axe  9 cue mix          1020 / 4095
+[ 180.36s] axe  9 cue mix          1034 / 4095
+[ 180.36s] axe  9 cue mix          1048 / 4095
+[ 180.37s] axe  9 cue mix          1061 / 4095
+[ 180.37s] axe  9 cue mix          1074 / 4095
+[ 180.37s] axe  9 cue mix          1089 / 4095
+[ 180.37s] axe  9 cue mix          1104 / 4095
+[ 180.37s] axe  9 cue mix          1120 / 4095
+[ 180.38s] axe  9 cue mix          1138 / 4095
+[ 180.38s] axe  9 cue mix          1156 / 4095
+[ 180.38s] axe  9 cue mix          1175 / 4095
+[ 180.38s] axe  9 cue mix          1192 / 4095
+[ 180.39s] axe  9 cue mix          1210 / 4095
+[ 180.39s] axe  9 cue mix          1227 / 4095
+[ 180.39s] axe  9 cue mix          1245 / 4095
+[ 180.39s] axe  9 cue mix          1262 / 4095
+[ 180.39s] axe  9 cue mix          1280 / 4095
+[ 180.40s] axe  9 cue mix          1297 / 4095
+[ 180.40s] axe  9 cue mix          1315 / 4095
+[ 180.40s] axe  9 cue mix          1331 / 4095
+[ 180.40s] axe  9 cue mix          1347 / 4095
+[ 180.41s] axe  9 cue mix          1364 / 4095
+[ 180.41s] axe  9 cue mix          1382 / 4095
+[ 180.41s] axe  9 cue mix          1403 / 4095
+[ 180.41s] axe  9 cue mix          1423 / 4095
+[ 180.41s] axe  9 cue mix          1442 / 4095
+[ 180.42s] axe  9 cue mix          1462 / 4095
+[ 180.42s] axe  9 cue mix          1482 / 4095
+[ 180.42s] axe  9 cue mix          1501 / 4095
+[ 180.43s] axe  9 cue mix          1520 / 4095
+[ 180.43s] axe  9 cue mix          1537 / 4095
+[ 180.43s] axe  9 cue mix          1557 / 4095
+[ 180.43s] axe  9 cue mix          1601 / 4095
+[ 180.43s] axe  9 cue mix          1633 / 4095
+[ 180.44s] axe  9 cue mix          1656 / 4095
+[ 180.44s] axe  9 cue mix          1679 / 4095
+[ 180.44s] axe  9 cue mix          1703 / 4095
+[ 180.44s] axe  9 cue mix          1726 / 4095
+[ 180.45s] axe  9 cue mix          1747 / 4095
+[ 180.45s] axe  9 cue mix          1767 / 4095
+[ 180.45s] axe  9 cue mix          1786 / 4095
+[ 180.45s] axe  9 cue mix          1804 / 4095
+[ 180.45s] axe  9 cue mix          1822 / 4095
+[ 180.46s] axe  9 cue mix          1841 / 4095
+[ 180.46s] axe  9 cue mix          1860 / 4095
+[ 180.46s] axe  9 cue mix          1877 / 4095
+[ 180.47s] axe  9 cue mix          1898 / 4095
+[ 180.47s] axe  9 cue mix          1923 / 4095
+[ 180.47s] axe  9 cue mix          1966 / 4095
+[ 180.47s] axe  9 cue mix          2005 / 4095
+[ 180.47s] axe  9 cue mix          2021 / 4095
+[ 180.47s] axe  9 cue mix          2032 / 4095
+[ 180.48s] axe  9 cue mix          2044 / 4095
+[ 180.50s] axe  9 cue mix          2055 / 4095
+[ 180.66s] axe  9 cue mix          2067 / 4095
+[ 180.67s] axe  9 cue mix          2080 / 4095
+[ 180.74s] axe  9 cue mix          2101 / 4095
+[ 180.74s] axe  9 cue mix          2118 / 4095
+[ 180.76s] axe  9 cue mix          2143 / 4095
+[ 180.76s] axe  7 crossfader       2175 / 4095
+[ 180.76s] axe  9 cue mix          2960 / 4095
+[ 180.76s] axe 10 proximite jog G  3031 / 4095
+[ 180.76s] axe 28 EQ C filtre      2061 / 4095
+[ 180.76s] axe 29 EQ C bas         2066 / 4095
+[ 180.76s] axe 30 EQ C medium      2088 / 4095
+[ 180.76s] axe 32 FX G 3           2001 / 4095
+[ 180.76s] axe 33 FX G 2           2054 / 4095
+[ 180.76s] axe  9 cue mix          2975 / 4095
+[ 180.76s] axe  4 volume de boucle 2046 / 4095
+[ 180.76s] axe  9 cue mix          3037 / 4095
+[ 180.76s] axe 11 proximite jog D  3070 / 4095
+[ 180.76s] axe  9 cue mix          3054 / 4095
+[ 180.77s] axe  9 cue mix          3074 / 4095
+[ 180.77s] axe  9 cue mix          3093 / 4095
+[ 180.78s] axe  9 cue mix          3113 / 4095
+[ 180.78s] axe  9 cue mix          3124 / 4095
+[ 180.78s] axe  9 cue mix          3145 / 4095
+[ 180.78s] axe  9 cue mix          3158 / 4095
+[ 180.79s] axe  9 cue mix          3171 / 4095
+[ 180.79s] axe  9 cue mix          3185 / 4095
+[ 180.79s] axe  9 cue mix          3200 / 4095
+[ 180.79s] axe  9 cue mix          3215 / 4095
+[ 180.79s] axe 28 EQ C filtre      2072 / 4095
+[ 180.80s] axe  9 cue mix          3233 / 4095
+[ 180.80s] axe 30 EQ C medium      2099 / 4095
+[ 180.80s] axe 33 FX G 2           2065 / 4095
+[ 180.80s] axe  9 cue mix          3250 / 4095
+[ 180.80s] axe  9 cue mix          3268 / 4095
+[ 180.80s] axe 29 EQ C bas         2077 / 4095
+[ 180.80s] axe  9 cue mix          3288 / 4095
+[ 180.80s] axe 32 FX G 3           2012 / 4095
+[ 180.80s] axe  9 cue mix          3307 / 4095
+[ 180.81s] axe  9 cue mix          3325 / 4095
+[ 180.81s] axe 11 proximite jog D  3081 / 4095
+[ 180.82s] axe  9 cue mix          3341 / 4095
+[ 180.82s] axe  9 cue mix          3355 / 4095
+[ 180.82s] axe  9 cue mix          3369 / 4095
+[ 180.82s] axe  9 cue mix          3428 / 4095
+[ 180.82s] axe  9 cue mix          3442 / 4095
+[ 180.83s] axe  9 cue mix          3456 / 4095
+[ 180.83s] axe  9 cue mix          3474 / 4095
+[ 180.83s] axe  9 cue mix          3491 / 4095
+[ 180.83s] axe  9 cue mix          3509 / 4095
+[ 180.84s] axe  9 cue mix          3529 / 4095
+[ 180.84s] axe  9 cue mix          3547 / 4095
+[ 180.84s] axe  9 cue mix          3566 / 4095
+[ 180.84s] axe  9 cue mix          3582 / 4095
+[ 180.85s] axe  9 cue mix          3597 / 4095
+[ 180.85s] axe  9 cue mix          3613 / 4095
+[ 180.85s] axe  9 cue mix          3629 / 4095
+[ 180.85s] axe  9 cue mix          3664 / 4095
+[ 180.86s] axe  9 cue mix          3678 / 4095
+[ 180.86s] axe  9 cue mix          3692 / 4095
+[ 180.86s] axe  9 cue mix          3706 / 4095
+[ 180.86s] axe  9 cue mix          3720 / 4095
+[ 180.87s] axe  9 cue mix          3734 / 4095
+[ 180.87s] axe  9 cue mix          3750 / 4095
+[ 180.87s] axe  9 cue mix          3764 / 4095
+[ 180.87s] axe  9 cue mix          3777 / 4095
+[ 180.87s] axe  9 cue mix          3791 / 4095
+[ 180.87s] axe 10 proximite jog G  3042 / 4095
+[ 180.88s] axe  9 cue mix          3803 / 4095
+[ 180.88s] axe  4 volume de boucle 2057 / 4095
+[ 180.88s] axe  9 cue mix          3822 / 4095
+[ 180.88s] axe  9 cue mix          3834 / 4095
+[ 180.88s] axe  9 cue mix          3848 / 4095
+[ 180.89s] axe  9 cue mix          3859 / 4095
+[ 180.89s] axe  9 cue mix          3872 / 4095
+[ 180.89s] axe  9 cue mix          3885 / 4095
+[ 180.89s] axe  7 crossfader       2186 / 4095
+[ 180.89s] axe  9 cue mix          3897 / 4095
+[ 180.90s] axe  9 cue mix          3910 / 4095
+[ 180.90s] axe  9 cue mix          3921 / 4095
+[ 180.90s] axe  9 cue mix          3933 / 4095
+[ 180.90s] axe  9 cue mix          3946 / 4095
+[ 180.90s] axe  9 cue mix          3959 / 4095
+[ 180.91s] axe  9 cue mix          3972 / 4095
+[ 180.91s] axe  9 cue mix          3987 / 4095
+[ 180.91s] axe  9 cue mix          4000 / 4095
+[ 180.92s] axe  9 cue mix          4014 / 4095
+[ 180.92s] axe  9 cue mix          4029 / 4095
+[ 180.92s] axe  9 cue mix          4043 / 4095
+[ 180.92s] axe  9 cue mix          4064 / 4095
+[ 180.92s] axe  9 cue mix          4078 / 4095
+[ 180.93s] axe  9 cue mix          4091 / 4095
+[ 181.48s] … 1506 blocs recus depuis 3 s, aucun changement (total 1514)
+[ 184.50s] … plus aucun bloc ne parvient (total 1514)
+[ 187.56s] … plus aucun bloc ne parvient (total 1514)
+[ 190.64s] … plus aucun bloc ne parvient (total 1514)
+[ 193.69s] … plus aucun bloc ne parvient (total 1514)
+[ 196.76s] … plus aucun bloc ne parvient (total 1514)
+[ 199.82s] … plus aucun bloc ne parvient (total 1514)
+[ 202.89s] … plus aucun bloc ne parvient (total 1514)
+[ 205.95s] … plus aucun bloc ne parvient (total 1514)
+[ 209.21s] … plus aucun bloc ne parvient (total 1514)
+[ 212.27s] … plus aucun bloc ne parvient (total 1514)
+[ 215.52s] … plus aucun bloc ne parvient (total 1514)
+[ 218.58s] … plus aucun bloc ne parvient (total 1514)
+[ 221.65s] … plus aucun bloc ne parvient (total 1514)
+[ 224.73s] … plus aucun bloc ne parvient (total 1514)
+[ 227.78s] … plus aucun bloc ne parvient (total 1514)
+[ 230.86s] … plus aucun bloc ne parvient (total 1514)
+[ 233.91s] … plus aucun bloc ne parvient (total 1514)
+[ 236.99s] … plus aucun bloc ne parvient (total 1514)
+[ 240.04s] … plus aucun bloc ne parvient (total 1514)
+[ 243.05s] … plus aucun bloc ne parvient (total 1514)
+[ 246.08s] … plus aucun bloc ne parvient (total 1514)
+[ 249.15s] … plus aucun bloc ne parvient (total 1514)
+[ 252.21s] … plus aucun bloc ne parvient (total 1514)
+[ 255.27s] … plus aucun bloc ne parvient (total 1514)
+[ 258.34s] … plus aucun bloc ne parvient (total 1514)
+[ 261.41s] … plus aucun bloc ne parvient (total 1514)
+[ 264.47s] … plus aucun bloc ne parvient (total 1514)
+[ 267.52s] … plus aucun bloc ne parvient (total 1514)
+[ 270.78s] … plus aucun bloc ne parvient (total 1514)
+[ 274.03s] … plus aucun bloc ne parvient (total 1514)
+[ 277.10s] … plus aucun bloc ne parvient (total 1514)
+[ 280.17s] … plus aucun bloc ne parvient (total 1514)
+[ 283.24s] … plus aucun bloc ne parvient (total 1514)
+[ 286.29s] … plus aucun bloc ne parvient (total 1514)
+[ 289.36s] … plus aucun bloc ne parvient (total 1514)
+[ 292.42s] … plus aucun bloc ne parvient (total 1514)
+[ 295.49s] … plus aucun bloc ne parvient (total 1514)
+[ 298.53s] … plus aucun bloc ne parvient (total 1514)
+[ 301.80s] … plus aucun bloc ne parvient (total 1514)
+[ 304.87s] … plus aucun bloc ne parvient (total 1514)
+[ 308.13s] … plus aucun bloc ne parvient (total 1514)
+[ 311.18s] … plus aucun bloc ne parvient (total 1514)
+[ 314.43s] … plus aucun bloc ne parvient (total 1514)
+[ 317.50s] … plus aucun bloc ne parvient (total 1514)
+[ 320.58s] … plus aucun bloc ne parvient (total 1514)
+[ 323.63s] … plus aucun bloc ne parvient (total 1514)
+[ 326.69s] … plus aucun bloc ne parvient (total 1514)
+[ 329.76s] … plus aucun bloc ne parvient (total 1514)
+[ 332.83s] … plus aucun bloc ne parvient (total 1514)
+[ 335.89s] … plus aucun bloc ne parvient (total 1514)
+[ 338.96s] … plus aucun bloc ne parvient (total 1514)
+[ 342.00s] … plus aucun bloc ne parvient (total 1514)
+[ 345.27s] … plus aucun bloc ne parvient (total 1514)
+[ 348.34s] … plus aucun bloc ne parvient (total 1514)
+[ 351.40s] … plus aucun bloc ne parvient (total 1514)
+[ 354.47s] … plus aucun bloc ne parvient (total 1514)
+[ 357.53s] … plus aucun bloc ne parvient (total 1514)
+[ 360.60s] … plus aucun bloc ne parvient (total 1514)
+[ 363.81s] … plus aucun bloc ne parvient (total 1514)
+[ 366.82s] … plus aucun bloc ne parvient (total 1514)
+[ 369.88s] … plus aucun bloc ne parvient (total 1514)
+[ 372.95s] … plus aucun bloc ne parvient (total 1514)
+[ 376.01s] … plus aucun bloc ne parvient (total 1514)
+[ 379.08s] … plus aucun bloc ne parvient (total 1514)
+[ 382.14s] … plus aucun bloc ne parvient (total 1514)
+[ 385.21s] … plus aucun bloc ne parvient (total 1514)
+[ 388.27s] … plus aucun bloc ne parvient (total 1514)
+[ 391.34s] … plus aucun bloc ne parvient (total 1514)
+[ 394.40s] … plus aucun bloc ne parvient (total 1514)
+[ 397.47s] … plus aucun bloc ne parvient (total 1514)
+[ 400.53s] … plus aucun bloc ne parvient (total 1514)
+[ 403.60s] … plus aucun bloc ne parvient (total 1514)
+[ 406.61s] … plus aucun bloc ne parvient (total 1514)
+[ 409.64s] … plus aucun bloc ne parvient (total 1514)
+[ 412.70s] … plus aucun bloc ne parvient (total 1514)
+[ 415.77s] … plus aucun bloc ne parvient (total 1514)
+[ 419.02s] … plus aucun bloc ne parvient (total 1514)
+[ 422.08s] … plus aucun bloc ne parvient (total 1514)
+[ 425.15s] … plus aucun bloc ne parvient (total 1514)
+[ 428.21s] … plus aucun bloc ne parvient (total 1514)
+[ 431.28s] … plus aucun bloc ne parvient (total 1514)
+[ 434.34s] … plus aucun bloc ne parvient (total 1514)
+[ 437.59s] … plus aucun bloc ne parvient (total 1514)
+[ 440.66s] … plus aucun bloc ne parvient (total 1514)
+[ 443.72s] … plus aucun bloc ne parvient (total 1514)
+[ 446.79s] … plus aucun bloc ne parvient (total 1514)
+[ 450.04s] … plus aucun bloc ne parvient (total 1514)
+[ 453.11s] … plus aucun bloc ne parvient (total 1514)
+[ 456.17s] … plus aucun bloc ne parvient (total 1514)
+[ 459.23s] … plus aucun bloc ne parvient (total 1514)
+[ 462.30s] … plus aucun bloc ne parvient (total 1514)
+[ 465.36s] … plus aucun bloc ne parvient (total 1514)
+[ 468.43s] … plus aucun bloc ne parvient (total 1514)
+[ 471.49s] … plus aucun bloc ne parvient (total 1514)
+[ 474.56s] … plus aucun bloc ne parvient (total 1514)
+[ 477.62s] … plus aucun bloc ne parvient (total 1514)
+[ 480.69s] … plus aucun bloc ne parvient (total 1514)
+[ 483.75s] … plus aucun bloc ne parvient (total 1514)
+[ 486.82s] … plus aucun bloc ne parvient (total 1514)
+[ 489.89s] … plus aucun bloc ne parvient (total 1514)
+[ 492.95s] … plus aucun bloc ne parvient (total 1514)
+[ 496.02s] … plus aucun bloc ne parvient (total 1514)
+[ 499.08s] … plus aucun bloc ne parvient (total 1514)
+[ 502.15s] … plus aucun bloc ne parvient (total 1514)
+[ 505.21s] … plus aucun bloc ne parvient (total 1514)
+[ 508.23s] … plus aucun bloc ne parvient (total 1514)
+[ 511.25s] … plus aucun bloc ne parvient (total 1514)
+[ 514.31s] … plus aucun bloc ne parvient (total 1514)
+[ 517.38s] … plus aucun bloc ne parvient (total 1514)
+[ 520.44s] … plus aucun bloc ne parvient (total 1514)
+[ 523.51s] … plus aucun bloc ne parvient (total 1514)
+[ 526.57s] … plus aucun bloc ne parvient (total 1514)
+[ 529.64s] … plus aucun bloc ne parvient (total 1514)
+[ 532.70s] … plus aucun bloc ne parvient (total 1514)
+[ 535.77s] … plus aucun bloc ne parvient (total 1514)
+[ 539.02s] … plus aucun bloc ne parvient (total 1514)
+[ 542.08s] … plus aucun bloc ne parvient (total 1514)
+[ 545.15s] … plus aucun bloc ne parvient (total 1514)
+[ 548.21s] … plus aucun bloc ne parvient (total 1514)
+[ 551.28s] … plus aucun bloc ne parvient (total 1514)
+[ 554.34s] … plus aucun bloc ne parvient (total 1514)
+[ 557.41s] … plus aucun bloc ne parvient (total 1514)
+[ 560.47s] … plus aucun bloc ne parvient (total 1514)
+[ 563.54s] … plus aucun bloc ne parvient (total 1514)
+[ 566.60s] … plus aucun bloc ne parvient (total 1514)
+[ 569.85s] … plus aucun bloc ne parvient (total 1514)
+[ 572.92s] … plus aucun bloc ne parvient (total 1514)
+[ 575.98s] … plus aucun bloc ne parvient (total 1514)
+[ 579.05s] … plus aucun bloc ne parvient (total 1514)
+[ 582.11s] … plus aucun bloc ne parvient (total 1514)
+[ 585.18s] … plus aucun bloc ne parvient (total 1514)
+[ 588.24s] … plus aucun bloc ne parvient (total 1514)
+[ 591.31s] … plus aucun bloc ne parvient (total 1514)
+[ 594.56s] … plus aucun bloc ne parvient (total 1514)
+[ 597.63s] … plus aucun bloc ne parvient (total 1514)
+[ 600.74s] … plus aucun bloc ne parvient (total 1514)
+[ 603.76s] … plus aucun bloc ne parvient (total 1514)
+[ 606.82s] … plus aucun bloc ne parvient (total 1514)
+[ 609.86s] … plus aucun bloc ne parvient (total 1514)
+[ 613.14s] … plus aucun bloc ne parvient (total 1514)
+[ 616.20s] … plus aucun bloc ne parvient (total 1514)
+[ 619.27s] … plus aucun bloc ne parvient (total 1514)
+[ 622.33s] … plus aucun bloc ne parvient (total 1514)
+[ 625.40s] … plus aucun bloc ne parvient (total 1514)
+[ 628.46s] … plus aucun bloc ne parvient (total 1514)
+[ 631.53s] … plus aucun bloc ne parvient (total 1514)
+[ 634.59s] … plus aucun bloc ne parvient (total 1514)
+[ 637.66s] … plus aucun bloc ne parvient (total 1514)
+[ 640.72s] … plus aucun bloc ne parvient (total 1514)
+[ 643.79s] … plus aucun bloc ne parvient (total 1514)
+[ 646.85s] … plus aucun bloc ne parvient (total 1514)
+[ 649.92s] … plus aucun bloc ne parvient (total 1514)
+[ 652.98s] … plus aucun bloc ne parvient (total 1514)
+[ 656.05s] … plus aucun bloc ne parvient (total 1514)
+[ 659.30s] … plus aucun bloc ne parvient (total 1514)
+[ 662.37s] … plus aucun bloc ne parvient (total 1514)
+[ 665.43s] … plus aucun bloc ne parvient (total 1514)
+[ 668.50s] … plus aucun bloc ne parvient (total 1514)
+[ 671.56s] … plus aucun bloc ne parvient (total 1514)
+[ 674.62s] … plus aucun bloc ne parvient (total 1514)
+[ 677.69s] … plus aucun bloc ne parvient (total 1514)
+[ 680.75s] … plus aucun bloc ne parvient (total 1514)
+[ 683.82s] … plus aucun bloc ne parvient (total 1514)
+[ 686.88s] … plus aucun bloc ne parvient (total 1514)
+[ 690.13s] … plus aucun bloc ne parvient (total 1514)
+[ 693.20s] … plus aucun bloc ne parvient (total 1514)
+[ 696.26s] … plus aucun bloc ne parvient (total 1514)
+[ 699.33s] … plus aucun bloc ne parvient (total 1514)
+[ 702.39s] … plus aucun bloc ne parvient (total 1514)
+[ 705.46s] … plus aucun bloc ne parvient (total 1514)
+[ 708.52s] … plus aucun bloc ne parvient (total 1514)
+[ 711.59s] … plus aucun bloc ne parvient (total 1514)
+[ 714.65s] … plus aucun bloc ne parvient (total 1514)
+[ 717.72s] … plus aucun bloc ne parvient (total 1514)
+[ 720.79s] … plus aucun bloc ne parvient (total 1514)
+[ 724.04s] … plus aucun bloc ne parvient (total 1514)
+[ 727.10s] … plus aucun bloc ne parvient (total 1514)
+[ 730.17s] … plus aucun bloc ne parvient (total 1514)
+[ 733.23s] … plus aucun bloc ne parvient (total 1514)
+[ 736.29s] … plus aucun bloc ne parvient (total 1514)
+[ 739.36s] … plus aucun bloc ne parvient (total 1514)
+[ 742.43s] … plus aucun bloc ne parvient (total 1514)
+[ 745.49s] … plus aucun bloc ne parvient (total 1514)
+[ 748.75s] … plus aucun bloc ne parvient (total 1514)
+[ 751.81s] … plus aucun bloc ne parvient (total 1514)
+[ 754.87s] … plus aucun bloc ne parvient (total 1514)
+[ 757.94s] … plus aucun bloc ne parvient (total 1514)
+[ 761.00s] … plus aucun bloc ne parvient (total 1514)
+[ 764.07s] … plus aucun bloc ne parvient (total 1514)
+[ 767.14s] … plus aucun bloc ne parvient (total 1514)
+[ 770.20s] … plus aucun bloc ne parvient (total 1514)
+[ 773.26s] … plus aucun bloc ne parvient (total 1514)
+[ 776.33s] … plus aucun bloc ne parvient (total 1514)
+[ 779.39s] … plus aucun bloc ne parvient (total 1514)
+[ 782.46s] … plus aucun bloc ne parvient (total 1514)
+[ 785.52s] … plus aucun bloc ne parvient (total 1514)
+[ 788.59s] … plus aucun bloc ne parvient (total 1514)
+[ 791.65s] … plus aucun bloc ne parvient (total 1514)
+[ 794.72s] … plus aucun bloc ne parvient (total 1514)
+[ 797.93s] … plus aucun bloc ne parvient (total 1514)
+
+Arret. 1514 blocs recus au total.
