@@ -140,7 +140,9 @@ fn mot(bloc: &[u8], offset: usize) -> u16 {
 
 pub struct Decodeur {
     boutons: [bool; NB_BOUTONS],
-    analogiques: [u16; NB_ANALOGIQUES],
+    /// 🔴 `Option`, et non `u16`. Un axe dont on n'a **rien vu** n'est pas un
+    /// axe a zero : c'est toute la tache 9. Voir `new()`.
+    analogiques: [Option<u16>; NB_ANALOGIQUES],
     encodeurs: [u8; NB_ENCODEURS],
     jogs: [u16; 2],
 }
@@ -152,18 +154,30 @@ impl Default for Decodeur {
 }
 
 impl Decodeur {
-    /// L'etat initial — tout a zero, tous les boutons relaches — sert de
-    /// **reference**. Il n'y a donc pas de « premier passage » a traiter a
-    /// part : un fader deja a mi-course emet des son premier bloc, un fader
-    /// a zero n'emet rien, et c'est exact dans les deux cas.
+    /// 🔴 Les axes partent **inconnus** (`None`), pas a zero.
     ///
-    /// ⚠️ Le pont MIDI (tache 5) aura besoin de l'etat COMPLET a la
-    /// connexion d'un client, pas seulement des changements. Ce sera un
-    /// accesseur sur cette structure, pas un rejeu d'evenements.
+    /// Ce commentaire disait le contraire jusqu'a la tache 9 : *« un fader a
+    /// zero n'emet rien, et c'est exact dans les deux cas »*. C'etait faux.
+    /// Un fader **reellement baisse** est indiscernable d'un axe jamais vu si
+    /// les deux valent 0 : il n'annonce donc jamais sa position, le potard a
+    /// l'ecran garde celle de la session precedente, et la desynchronisation
+    /// ne se voit qu'au premier geste. Mesure du 2026-08-26 : sur les 36 axes
+    /// de la rafale d'ouverture, **les 5 absents etaient exactement ceux qui
+    /// valaient 0** — les quatre volumes et le MIC.
+    ///
+    /// Avec `None`, la premiere valeur d'un axe est toujours emise, quelle
+    /// qu'elle soit. Les boutons, eux, gardent leur reference a `false` :
+    /// c'est `BITS_MUETS` (cote `midi.rs`) qui traite le probleme symetrique.
+    ///
+    /// ⚠️ Ceci ne couvre que le demarrage **du pont**. Un client Web MIDI qui
+    /// se connecte plus tard ne verra toujours rien avant le premier geste —
+    /// et ce n'est pas a ce module de le resoudre : c'est la **prise en
+    /// douceur** cote DekkR (tache 10), qui n'a pas besoin de connaitre la
+    /// position, seulement de ne pas sauter.
     pub fn new() -> Decodeur {
         Decodeur {
             boutons: [false; NB_BOUTONS],
-            analogiques: [0; NB_ANALOGIQUES],
+            analogiques: [None; NB_ANALOGIQUES],
             encodeurs: [0; NB_ENCODEURS],
             jogs: [0; 2],
         }
@@ -193,8 +207,10 @@ impl Decodeur {
             2..=7 => {
                 for &(offset, axe) in AXES_PAR_BLOC[(id - 2) as usize] {
                     let v = mot(bloc, offset);
-                    if self.analogiques[axe as usize] != v {
-                        self.analogiques[axe as usize] = v;
+                    // `None != Some(v)` pour tout v : la premiere valeur d'un
+                    // axe passe toujours, **y compris zero**.
+                    if self.analogiques[axe as usize] != Some(v) {
+                        self.analogiques[axe as usize] = Some(v);
                         sortie.push(Evenement::Analogique {
                             index: axe,
                             valeur: v,
@@ -359,9 +375,38 @@ mod tests {
             index: 7,
             valeur: 0x0332
         }));
-        // Les quatre faders de volume sont a zero, donc identiques au repos :
-        // rien a signaler. Restent le crossfader et le potard de boucle.
-        assert_eq!(v.len(), 2);
+        // Les SIX axes du bloc 2 sont annonces, y compris les quatre faders de
+        // volume a zero. Avant la tache 9 il n'y en avait que deux : un axe a
+        // zero etait indiscernable de l'etat de repos du decodeur.
+        assert_eq!(v.len(), 6);
+    }
+
+    #[test]
+    fn un_axe_a_zero_est_annonce_comme_les_autres() {
+        // 🔴 NON-REGRESSION — le defaut que la tache 9 corrige.
+        //
+        // Tant que `analogiques` etait un `[u16; 36]` initialise a zero, un axe
+        // REELLEMENT a zero etait indiscernable de l'etat de repos du decodeur
+        // et n'emettait **jamais** rien. Les quatre faders de volume de BLOC2
+        // sont a zero — faders baisses — et personne ne l'apprenait : le potard
+        // a l'ecran gardait la valeur de la session precedente pendant que le
+        // fader physique etait en bas. Desynchronisation silencieuse, invisible
+        // jusqu'au premier geste sur ce fader.
+        //
+        // 🔑 Miroir exact de `BITS_MUETS` cote numerique : la meme reference a
+        // zero fait passer des bits fermes pour enfonces, et un axe a zero pour
+        // un axe immobile. Meme cause, effets opposes.
+        let mut d = Decodeur::new();
+        let v = evts(&mut d, &BLOC2);
+        for axe in [0u8, 1, 2, 3] {
+            assert!(
+                v.contains(&Evenement::Analogique {
+                    index: axe,
+                    valeur: 0
+                }),
+                "l'axe {axe}, a zero, n'a pas ete annonce : {v:?}"
+            );
+        }
     }
 
     /// 🔴 Barriere sur le SEUL ecart assume vis-a-vis de `caiaq`.
@@ -370,8 +415,16 @@ mod tests {
     /// offset vaut 0 et rien d'autre, alors que l'offset 5 parcourt 9 → 4095
     /// quand on tourne le potard du Loop Recorder, seul, boitier au repos.
     ///
-    /// Le fixture porte **2053 a l'offset 5 et 0 a l'offset 6** : revenir au
-    /// mapping de `caiaq` fait disparaitre l'evenement, et ce test rougit.
+    /// Le fixture porte **2053 a l'offset 5 et 0 a l'offset 6**.
+    ///
+    /// 🔴 **Justification reecrite a la tache 9.** Elle disait : *« revenir au
+    /// mapping de caiaq fait disparaitre l'evenement »*. Ce n'est plus vrai —
+    /// depuis que les axes partent `None`, l'offset 6 emettrait un evenement
+    /// portant la **valeur 0**. La barriere tient toujours, parce que
+    /// l'assertion porte sur la valeur **2053** et non sur la presence d'un
+    /// evenement ; mais elle tient pour une autre raison qu'ecrite.
+    /// *Une barriere dont la justification a vieilli est une barriere qu'on
+    /// croit comprendre.*
     #[test]
     fn bloc_2_le_potard_de_boucle_est_a_l_offset_5_pas_6() {
         let mut d = Decodeur::new();
@@ -473,11 +526,14 @@ mod tests {
     }
 
     #[test]
-    fn oublier_remet_la_reference_a_zero() {
+    fn oublier_remet_les_axes_dans_l_ignorance() {
+        // Renomme a la tache 9 : il n'y a plus de « reference a zero » a
+        // remettre. Apres un debranchement, les 36 axes redeviennent INCONNUS,
+        // et le boitier suivant reannonce donc tout — y compris ses zeros.
         let mut d = Decodeur::new();
         evts(&mut d, &BLOC2);
         d.oublier();
-        assert!(!evts(&mut d, &BLOC2).is_empty());
+        assert_eq!(evts(&mut d, &BLOC2).len(), 6);
     }
 
     #[test]
