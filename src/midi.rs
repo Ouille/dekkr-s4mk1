@@ -10,12 +10,20 @@
 // L'ouverture du port virtuel vit dans `sortie.rs`, qui ne decide rien.
 
 use crate::decode::{Cote, Evenement, NB_ANALOGIQUES, NB_BOUTONS, NB_ENCODEURS};
+use crate::shift::CoucheShift;
 
 // ── Vocabulaire MIDI (SPEC-S4-001 §3) ────────────────────────────────────────
 
-/// Les 96 bits du bloc 0, couche normale. La couche SHIFT (canal 1) est la
-/// tache 6.
+/// Les 96 bits du bloc 0, couche normale.
 pub const CANAL_BOUTONS: u8 = 0;
+/// Les 96 memes bits, couche SHIFT. Portee GLOBALE : n'importe lequel des deux
+/// boutons SHIFT bascule la facade entiere (decision PO du 2026-08-27).
+///
+/// ⚠️ La couche ne concerne que les BOUTONS. Les axes (canal 2), les jogs et
+/// les faders de tempo (3-6) et la rotation des encodeurs (canal 7) n'ont pas
+/// d'equivalent shifte dans le vocabulaire de la spec : un BROWSE shifte
+/// demanderait de nouveaux canaux, il est hors du perimetre de la tache 6.
+pub const CANAL_BOUTONS_SHIFT: u8 = 1;
 /// Les 36 axes, 12 bits ramenes a 7.
 pub const CANAL_ANALOGIQUES: u8 = 2;
 pub const CANAL_JOG_G: u8 = 3;
@@ -105,6 +113,7 @@ pub struct Traducteur {
     dernier_appui_ms: [Option<u64>; NB_BOUTONS],
     dernier_cran: [Option<u8>; NB_ENCODEURS],
     dernier_jog: [Option<u16>; 2],
+    shift: CoucheShift,
 }
 
 impl Default for Traducteur {
@@ -120,12 +129,14 @@ impl Traducteur {
             dernier_appui_ms: [None; NB_BOUTONS],
             dernier_cran: [None; NB_ENCODEURS],
             dernier_jog: [None; 2],
+            shift: CoucheShift::new(),
         }
     }
 
     /// Repartir de zero apres une reconnexion : les valeurs du boitier
-    /// precedent n'ont plus cours, et un encodeur dont on ignore le cran de
-    /// depart ne doit surtout pas produire un sens de rotation invente.
+    /// precedent n'ont plus cours, un encodeur dont on ignore le cran de
+    /// depart ne doit surtout pas produire un sens de rotation invente, et une
+    /// couche SHIFT restee armee enverrait toute la facade sur le canal 1.
     pub fn oublier(&mut self) {
         *self = Traducteur::new();
     }
@@ -141,6 +152,15 @@ impl Traducteur {
     }
 
     fn bouton(&mut self, index: u8, enfonce: bool, ms: u64, sortie: &mut Vec<MessageMidi>) {
+        // 🔴 AVANT toute autre garde, et en particulier avant la sortie sur
+        // `!enfonce` juste dessous. Un SHIFT est un modificateur MAINTENU : son
+        // relachement est la moitie de l'information. Lu apres cette sortie, il
+        // ne serait JAMAIS vu et la couche resterait armee a vie des le premier
+        // appui — un defaut qu'aucun test de la tache 5 n'aurait rougi.
+        // Le bouton SHIFT lui-meme n'emet rien : il change la couche (§3).
+        if self.shift.enregistrer(index, enfonce) {
+            return;
+        }
         if BITS_MUETS.contains(&index) {
             return;
         }
@@ -158,8 +178,15 @@ impl Traducteur {
             }
         }
         self.dernier_appui_ms[i] = Some(ms);
+        // 🔑 La note reste le NUMERO DE BIT dans les deux couches : seul le
+        // canal change. Aucune table de conversion, donc aucun endroit ou se
+        // tromper — c'est exactement ce qui a rendu la tache 5 sure.
         sortie.push(MessageMidi::NoteOn {
-            canal: CANAL_BOUTONS,
+            canal: if self.shift.armee() {
+                CANAL_BOUTONS_SHIFT
+            } else {
+                CANAL_BOUTONS
+            },
             note: index,
         });
     }
@@ -351,6 +378,142 @@ mod tests {
         assert_eq!(msgs(&mut t, appui(30), 1000).len(), 1);
         // Un autre bouton dans la meme milliseconde n'a rien a voir.
         assert_eq!(msgs(&mut t, appui(31), 1000).len(), 1);
+    }
+
+    // ── Couche SHIFT (tache 6) ───────────────────────────────────────────────
+
+    fn relache(index: u8) -> Evenement {
+        Evenement::Bouton {
+            index,
+            enfonce: false,
+        }
+    }
+
+    /// SHIFT gauche maintenu.
+    fn shift_g() -> Evenement {
+        appui(crate::shift::BITS_SHIFT[0])
+    }
+
+    #[test]
+    fn shift_maintenu_le_bouton_part_sur_la_couche_shiftee() {
+        let mut t = Traducteur::new();
+        msgs(&mut t, shift_g(), 0);
+        assert_eq!(
+            msgs(&mut t, appui(7), 10),
+            vec![MessageMidi::NoteOn {
+                canal: CANAL_BOUTONS_SHIFT,
+                note: 7
+            }]
+        );
+    }
+
+    #[test]
+    fn shift_relache_le_bouton_repart_sur_la_couche_normale() {
+        // 🔴 LE test de la tache 6. Il rougit si l'etat SHIFT est lu apres la
+        // sortie sur `!enfonce` : le relachement passerait inapercu et la
+        // couche resterait armee a vie. Tous les tests de la tache 5
+        // resteraient verts pendant ce temps.
+        let mut t = Traducteur::new();
+        msgs(&mut t, shift_g(), 0);
+        msgs(&mut t, appui(7), 10);
+        msgs(&mut t, relache(7), 20);
+        msgs(&mut t, relache(crate::shift::BITS_SHIFT[0]), 30);
+        assert_eq!(
+            msgs(&mut t, appui(7), 40),
+            vec![MessageMidi::NoteOn {
+                canal: CANAL_BOUTONS,
+                note: 7
+            }],
+            "la couche SHIFT est restee armee apres le relachement"
+        );
+    }
+
+    #[test]
+    fn les_bits_shift_n_emettent_jamais_rien() {
+        // Le bouton SHIFT change la couche, il n'est pas une action.
+        let mut t = Traducteur::new();
+        for bit in crate::shift::BITS_SHIFT {
+            assert!(
+                msgs(&mut t, appui(bit), 0).is_empty(),
+                "le bit {bit} a emis"
+            );
+            assert!(
+                msgs(&mut t, relache(bit), 100).is_empty(),
+                "le relachement du bit {bit} a emis"
+            );
+        }
+    }
+
+    #[test]
+    fn le_shift_droit_arme_aussi_un_bouton_du_deck_gauche() {
+        // Portee GLOBALE (decision PO du 2026-08-27) : il n'y a qu'une couche,
+        // et le SHIFT d'un deck vaut pour toute la facade.
+        let mut t = Traducteur::new();
+        msgs(&mut t, appui(crate::shift::BITS_SHIFT[1]), 0);
+        assert_eq!(
+            msgs(&mut t, appui(7), 10),
+            vec![MessageMidi::NoteOn {
+                canal: CANAL_BOUTONS_SHIFT,
+                note: 7
+            }]
+        );
+    }
+
+    #[test]
+    fn un_seul_des_deux_shift_relache_ne_desarme_pas_la_couche() {
+        let mut t = Traducteur::new();
+        msgs(&mut t, appui(crate::shift::BITS_SHIFT[0]), 0);
+        msgs(&mut t, appui(crate::shift::BITS_SHIFT[1]), 10);
+        msgs(&mut t, relache(crate::shift::BITS_SHIFT[0]), 20);
+        assert_eq!(
+            msgs(&mut t, appui(7), 30),
+            vec![MessageMidi::NoteOn {
+                canal: CANAL_BOUTONS_SHIFT,
+                note: 7
+            }],
+            "relacher un SHIFT a fait tomber la couche alors que l'autre tenait"
+        );
+    }
+
+    #[test]
+    fn un_bit_muet_reste_muet_sous_shift() {
+        // La couche ne ressuscite pas les bits exclus : sinon chaque connexion
+        // SHIFT maintenu enverrait quatre Note On sur le canal 1.
+        let mut t = Traducteur::new();
+        msgs(&mut t, shift_g(), 0);
+        for bit in BITS_MUETS {
+            assert!(
+                msgs(&mut t, appui(bit), 10).is_empty(),
+                "le bit muet {bit} a emis sous SHIFT"
+            );
+        }
+    }
+
+    #[test]
+    fn oublier_desarme_la_couche_shift() {
+        // Une reconnexion SHIFT maintenu laisserait toute la facade sur le
+        // canal 1 : le boitier ne renverra jamais le relachement d'avant.
+        let mut t = Traducteur::new();
+        msgs(&mut t, shift_g(), 0);
+        t.oublier();
+        assert_eq!(
+            msgs(&mut t, appui(7), 100),
+            vec![MessageMidi::NoteOn {
+                canal: CANAL_BOUTONS,
+                note: 7
+            }]
+        );
+    }
+
+    #[test]
+    fn l_anti_rebond_ne_distingue_pas_les_couches() {
+        // C'est le meme bouton physique : changer de couche entre deux appuis
+        // ne doit pas rouvrir la fenetre d'anti-rebond.
+        let mut t = Traducteur::new();
+        assert_eq!(msgs(&mut t, appui(30), 1000).len(), 1);
+        msgs(&mut t, shift_g(), 1002);
+        assert!(msgs(&mut t, appui(30), 1004).is_empty());
+        assert_eq!(msgs(&mut t, appui(30), 1011).len(), 1);
     }
 
     // ── Axes ordinaires ──────────────────────────────────────────────────────

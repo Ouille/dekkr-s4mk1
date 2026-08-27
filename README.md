@@ -59,6 +59,7 @@ de port virtuel ; l'outil y retombe proprement en sonde seule.
 | Canal | Type | Contenu |
 |---|---|---|
 | 0 | Note On, note = **numéro de bit** | les boutons — voir `MAPPING.md` |
+| 1 | Note On, **même note** | les mêmes boutons, **couche SHIFT** |
 | 2 | CC, cc = numéro d'axe | les 34 axes ordinaires, 12 bits → 7 |
 | 3 / 4 | Pitch bend 14 bits | jog gauche / droit |
 | 5 / 6 | Pitch bend 14 bits | fader de tempo gauche / droit |
@@ -68,6 +69,20 @@ Un **relâchement n'émet rien** : `MidiEngine.ts` ignore les Note Off. Et cinq 
 **muets par construction** — 20 et 23 (fermés au repos, sans contrôle physique connu),
 85, 86 et 87 (interrupteurs du panneau arrière). Sans cette exclusion, chaque connexion
 enverrait quatre Note On que personne n'a demandées.
+
+### La couche SHIFT
+
+Les deux boutons SHIFT (**bit 1** à gauche, **bit 57** à droite) n'émettent **jamais rien** :
+ils font passer les boutons du canal 0 au canal 1, **à note identique**. La portée est
+**globale** — n'importe lequel des deux bascule la façade entière, et la couche tient tant
+qu'au moins un des deux est maintenu.
+
+C'est le pont qui résout la couche, pas DekkR : `MidiEngine.ts` ignore les Note Off, donc
+un modificateur *maintenu* ne peut pas s'y exprimer. Le pont envoie deux notes différentes,
+le front n'a rien à savoir.
+
+⚠️ La couche ne concerne que les **boutons**. Les axes, les jogs, les faders de tempo et la
+rotation des encodeurs n'ont pas d'équivalent shifté.
 
 ### Le journal
 

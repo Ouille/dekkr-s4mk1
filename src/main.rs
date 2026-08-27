@@ -14,6 +14,7 @@ mod affichage;
 mod decode;
 mod journal;
 mod midi;
+mod shift;
 mod sortie;
 mod usb;
 
