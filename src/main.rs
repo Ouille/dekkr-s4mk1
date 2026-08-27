@@ -71,7 +71,20 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             // 🔴 Annoncer le fichier AVANT d'ecrire dedans : sans ca, on ne
             // sait pas ou est parti ce qu'on vient de lire a l'ecran.
             Ok(()) => println!("Journal : {c}  (ecrase a chaque lancement)\n"),
-            Err(e) => println!("⚠️ journal {c} impossible ({e}) — console seule\n"),
+            // 🔴 Nommer la cause la plus probable, sans l'affirmer. Le boitier
+            // exige les droits root sur macOS : un `sudo` laisse derriere lui un
+            // `sonde.log` appartenant a root, que le lancement suivant en
+            // utilisateur simple ne peut plus tronquer. Constate le 2026-08-27.
+            // Un message qui dit seulement « impossible » laisse chercher.
+            Err(e) => {
+                println!("⚠️ journal {c} impossible ({e}) — console seule");
+                if e.kind() == std::io::ErrorKind::PermissionDenied {
+                    println!("   Souvent un {c} laisse par un lancement en root.");
+                    println!("   Verifier : ls -l {c}   ·   au besoin : sudo rm {c}\n");
+                } else {
+                    println!();
+                }
+            }
         }
     }
 

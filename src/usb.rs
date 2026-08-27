@@ -211,14 +211,29 @@ pub enum Panne {
     Usb(rusb::Error),
 }
 
+/// Chemin du binaire en cours d'execution, pour une commande copiable telle
+/// quelle. Le repli ne sert que si `current_exe()` echoue — cas ou l'on ne peut
+/// de toute facon rien affirmer de mieux.
+fn chemin_du_binaire() -> String {
+    std::env::current_exe()
+        .map(|p| p.display().to_string())
+        .unwrap_or_else(|_| "<chemin du binaire>".to_string())
+}
+
 impl std::fmt::Display for Panne {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
             Panne::Descripteur(s) => write!(f, "descripteur inattendu : {s}"),
+            // 🔴 Le chemin est celui du binaire QUI TOURNE, jamais un chemin
+            // ecrit en dur. Il l'etait — `./target/release/sonde-s4mk1` — et
+            // `cargo run` produit `target/debug/` : la « commande exacte a
+            // relancer » que la spec promet designait un fichier qui n'existait
+            // pas. Constate au premier lancement reel, le 2026-08-27.
             Panne::Acces(e) => write!(
                 f,
-                "acces refuse ({e}) — relancer le binaire compile en root :\n\
-                 \x20      sudo ./target/release/sonde-s4mk1"
+                "acces refuse ({e}) — relancer LE MEME binaire en root :\n\
+                 \x20      sudo {}",
+                chemin_du_binaire()
             ),
             Panne::Usb(e) => write!(f, "erreur USB : {e}"),
         }
@@ -339,5 +354,32 @@ impl Drop for S4 {
     /// la mort du processus, mais pas lors d'une simple reconnexion a chaud.
     fn drop(&mut self) {
         let _ = self.handle.release_interface(self.iface);
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn le_message_d_acces_refuse_designe_le_binaire_qui_tourne() {
+        // 🔴 Le chemin etait ecrit en dur — `./target/release/sonde-s4mk1` —
+        // alors que `cargo run` produit `target/debug/`. La « commande exacte a
+        // relancer en root » que la spec promet designait donc un fichier qui
+        // n'existait pas. Constate au premier lancement reel, le 2026-08-27.
+        //
+        // Ce test compare au binaire courant : sous `cargo test` c'est le
+        // binaire de test, pas le programme — la valeur exacte importe peu,
+        // c'est le fait qu'elle soit DERIVEE et non ecrite qui compte.
+        let attendu = std::env::current_exe().unwrap().display().to_string();
+        let msg = Panne::Acces(rusb::Error::Access).to_string();
+        assert!(
+            msg.contains(&format!("sudo {attendu}")),
+            "le message ne designe pas le binaire courant : {msg}"
+        );
+        assert!(
+            !msg.contains("target/release"),
+            "chemin ecrit en dur revenu dans le message : {msg}"
+        );
     }
 }
