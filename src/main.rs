@@ -165,6 +165,17 @@ fn surveiller(brut: bool, midi: bool) -> Result<(), Box<dyn std::error::Error>> 
                         // et un encodeur dont on ignore le cran de depart ne
                         // doit pas produire une rotation au rebranchement.
                         traducteur.oublier();
+                        // 🔴 Le meme raisonnement vaut DE L'AUTRE COTE du fil : les positions
+                        // physiques que DekkR retenait pour sa prise en douceur ne valent plus
+                        // rien non plus. Il ne peut pas le savoir seul — son `onstatechange` ne
+                        // part pas, ce port virtuel restant ouvert tout du long (voir plus haut).
+                        // D'ou ce signal. Recette du 2026-08-28 §8.3.
+                        // ⚠️ ICI et pas ailleurs : avant que la moindre lecture ne reannonce les
+                        // axes. Emis apres, il rearmerait APRES les annonces, qui auraient deja
+                        // pu prendre le controle.
+                        if let Some(p) = port.as_mut() {
+                            p.emettre(&MessageMidi::rearmement());
+                        }
                         boitier = Some(s4);
                         attente_annoncee = false;
                         derniere_panne.clear();

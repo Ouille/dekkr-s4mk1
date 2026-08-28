@@ -35,6 +35,21 @@ pub const CANAL_TEMPO_D: u8 = 6;
 /// que sur le NUMERO de CC, jamais sur sa valeur. Deux sens = deux notes.
 pub const CANAL_ENCODEURS: u8 = 7;
 
+/// 🔴 Le boitier vient d.etre (re)arme — signal a DekkR, qui doit alors REARMER sa
+/// prise en douceur : les positions physiques qu.il retenait ne valent plus rien.
+///
+/// Pourquoi un message dedie : DekkR rearmait sur `MIDIAccess.onstatechange`, en
+/// croyant que cela valait « a chaque reconnexion du boitier ». Faux — ce port
+/// virtuel est ouvert AVANT le boitier et garde ouvert pour toute la vie du
+/// processus (voir `main.rs`), donc debrancher le S4 ne ferme rien et aucun
+/// evenement ne part. Recette du 2026-08-28 §8.3 : au rebranchement, le fader
+/// SAUTAIT a sa position physique.
+///
+/// Canal 15 : hors des canaux 0-7 que ce pont emet, donc sans collision possible.
+/// Pas de SysEx — DekkR demande `requestMIDIAccess({ sysex: false })`.
+pub const CANAL_REARMEMENT: u8 = 15;
+pub const CC_REARMEMENT: u8 = 0;
+
 /// Les deux faders de tempo, traites en pitch bend (D7) et non en CC.
 pub const AXE_TEMPO_G: u8 = 5;
 pub const AXE_TEMPO_D: u8 = 6;
@@ -81,6 +96,21 @@ pub enum MessageMidi {
 }
 
 impl MessageMidi {
+    /// Le signal « boitier (re)arme » : DekkR doit rearmer sa prise en douceur.
+    ///
+    /// 🔴 A emettre AVANT toute reannonce d.axe. La tache 9 fait annoncer la
+    /// position de tous les axes des la connexion ; si le rearmement arrivait
+    /// apres, ces annonces seraient traitees avec l.etat de prise PRECEDENT et
+    /// pourraient « prendre » le controle sur un croisement imaginaire — c.est
+    /// exactement le defaut que le signal existe pour empecher.
+    pub fn rearmement() -> MessageMidi {
+        MessageMidi::ControlChange {
+            canal: CANAL_REARMEMENT,
+            cc: CC_REARMEMENT,
+            valeur: 127,
+        }
+    }
+
     /// Les trois octets a poser sur le fil.
     pub fn octets(&self) -> [u8; 3] {
         match *self {
@@ -776,5 +806,48 @@ mod tests {
         // Apres reconnexion, le premier cran redevient une simple prise de
         // reference : sinon on inventerait une rotation au rebranchement.
         assert!(msgs(&mut t, enc(4, 12), 100).is_empty());
+    }
+}
+
+#[cfg(test)]
+mod tests_rearmement {
+    use super::*;
+
+    // SPEC-S4-001 §8.3 — recette du 2026-08-28 : au rebranchement du boitier, le fader de
+    // volume SAUTAIT a sa position physique au lieu de redemander un croisement. DekkR
+    // rearmait sur `onstatechange`, qui ne part jamais puisque ce pont garde son port
+    // virtuel ouvert. D'ou ce signal explicite.
+
+    #[test]
+    fn le_signal_de_rearmement_est_un_cc_sur_le_canal_reserve() {
+        let octets = MessageMidi::rearmement().octets();
+        assert_eq!(octets[0], 0xb0 | CANAL_REARMEMENT, "doit etre un Control Change sur 15");
+        assert_eq!(octets[1], CC_REARMEMENT, "numero de CC reserve");
+    }
+
+    #[test]
+    fn le_canal_de_rearmement_n_entre_en_collision_avec_aucun_canal_emis() {
+        // 🔴 Le garde-fou du choix de conception. Les sept canaux ci-dessous portent des
+        // gestes reels ; si le signal descendait dans cette plage, une rotation d'encodeur ou
+        // un mouvement de fader pourrait passer pour une reconnexion et rearmer en plein mix.
+        for canal in [
+            CANAL_BOUTONS,
+            CANAL_BOUTONS_SHIFT,
+            CANAL_ANALOGIQUES,
+            CANAL_JOG_G,
+            CANAL_JOG_D,
+            CANAL_TEMPO_G,
+            CANAL_TEMPO_D,
+            CANAL_ENCODEURS,
+        ] {
+            assert_ne!(canal, CANAL_REARMEMENT, "collision de canal");
+        }
+    }
+
+    #[test]
+    fn le_signal_tient_dans_les_sept_bits_du_midi() {
+        let octets = MessageMidi::rearmement().octets();
+        assert!(octets[1] <= 0x7f);
+        assert!(octets[2] <= 0x7f);
     }
 }
