@@ -165,17 +165,29 @@ fn surveiller(brut: bool, midi: bool) -> Result<(), Box<dyn std::error::Error>> 
                         // et un encodeur dont on ignore le cran de depart ne
                         // doit pas produire une rotation au rebranchement.
                         traducteur.oublier();
-                        // 🔴 Le meme raisonnement vaut DE L'AUTRE COTE du fil : les positions
-                        // physiques que DekkR retenait pour sa prise en douceur ne valent plus
-                        // rien non plus. Il ne peut pas le savoir seul — son `onstatechange` ne
-                        // part pas, ce port virtuel restant ouvert tout du long (voir plus haut).
-                        // D'ou ce signal. Recette du 2026-08-28 §8.3.
-                        // ⚠️ ICI et pas ailleurs : avant que la moindre lecture ne reannonce les
-                        // axes. Emis apres, il rearmerait APRES les annonces, qui auraient deja
-                        // pu prendre le controle.
-                        if let Some(p) = port.as_mut() {
-                            p.emettre(&MessageMidi::rearmement());
-                        }
+                        // 🔴 RETIRE le 2026-08-28 — c'etait `p.emettre(&MessageMidi::rearmement())`,
+                        // le signal du §8.3 vers DekkR. Il fait planter le pont (segfault) au
+                        // debranchement/rebranchement suivant. Voir BUG-012 dans le depot DekkR.
+                        //
+                        // La paire de mesures qui l'accuse, boitier MUET et zero bloc des deux
+                        // cotes, donc rien d'autre d'emis :
+                        //   • avec l'emit    → segfault au rebranchement
+                        //   • sans (a386ce2) → recuperation propre, firmware reannonce
+                        //
+                        // ⚠️ Le mecanisme n'est PAS compris. Emettre sur ce port virtuel n'a rien
+                        // d'anormal — la boucle de lecture le fait des dizaines de fois par
+                        // seconde sans jamais planter. Ce qui distingue cet appel : il est le
+                        // PREMIER envoi, et il a lieu pendant l'armement. Piste a instruire du
+                        // cote de midir/CoreMIDI, pas de la logique du pont.
+                        //
+                        // 🔑 Piege de raisonnement a ne pas repeter : le segfault n'apparait pas
+                        // a la ligne fautive, mais un tour de boucle plus tard. Avoir lu « le
+                        // crash precede `annoncer()` donc il precede l'emit » etait faux — l'emit
+                        // du tour PRECEDENT etait deja passe.
+                        //
+                        // Consequence assumee : le §8.3 redevient NON corrige. La prise en douceur
+                        // de DekkR ne se rearme pas au rebranchement du boitier. Un pont qui
+                        // plante est pire.
                         boitier = Some(s4);
                         attente_annoncee = false;
                         derniere_panne.clear();

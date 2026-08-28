@@ -103,6 +103,12 @@ impl MessageMidi {
     /// apres, ces annonces seraient traitees avec l.etat de prise PRECEDENT et
     /// pourraient « prendre » le controle sur un croisement imaginaire — c.est
     /// exactement le defaut que le signal existe pour empecher.
+    // 🔴 Plus appele en production depuis le 2026-08-28 : l'emettre a l'armement fait planter le
+    // pont au rebranchement suivant (BUG-012, mecanisme non compris). Conserve VOLONTAIREMENT
+    // avec ses constantes et ses tests — le protocole reste decide, et le cote DekkR le
+    // reconnait deja. Le jour ou la cause est trouvee, il n'y a qu'une ligne a remettre dans
+    // `main.rs`. Le supprimer obligerait a tout re-trancher.
+    #[allow(dead_code)]
     pub fn rearmement() -> MessageMidi {
         MessageMidi::ControlChange {
             canal: CANAL_REARMEMENT,
